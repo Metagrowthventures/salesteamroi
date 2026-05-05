@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ROI Calculator — MetaGrowth Ventures</title>
+<meta name="description" content="Calculate the true cost of building a sales team vs plugging into MetaGrowth Ventures' ready-built revenue engine. See real numbers instantly."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css"/>
+<script>
+function openBooking() {
+  var ov = document.getElementById('bk-overlay');
+  if (!ov) return;
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  var wrap = ov.querySelector('.meetings-iframe-container');
+  if (wrap && !wrap.querySelector('iframe')) {
+    var existing = document.getElementById('hs-meetings-script');
+    if (existing) {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src = existing.src + '&t=' + Date.now();
+      document.body.appendChild(s);
+    } else {
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://meetings.hubspot.com/josh549/revenue-audit?embed=true';
+      iframe.style.cssText = 'width:100%;height:100%;min-height:calc(100vh - 60px);border:none;display:block';
+      iframe.title = 'Book a Strategy Call';
+      iframe.allow = 'camera;microphone';
+      wrap.appendChild(iframe);
+    }
+  }
+}
+function closeBooking() {
+  var ov = document.getElementById('bk-overlay');
+  if (!ov) return;
+  ov.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function openMobDrawer() {
+  document.getElementById('mob-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobDrawer() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function smoothScroll(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: top, behavior: 'smooth' });
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeBooking(); closeMobDrawer(); }
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var ov = document.getElementById('bk-overlay');
+  if (ov) ov.addEventListener('click', function(e) { if (e.target === this) closeBooking(); });
+  var mob = document.getElementById('mob-btn');
+  if (mob) mob.addEventListener('click', openMobDrawer);
+  var dr = document.getElementById('mob-drawer');
+  if (dr) dr.addEventListener('click', function(e) { if (e.target === this) closeMobDrawer(); });
+});
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0A0A0A;--black-alt:#111111;--black-card:#161616;--black-deep:#0D0D0D;
+  --border:rgba(255,255,255,0.07);--border-gold:rgba(173,120,5,0.38);
+  --gold:#ad7805;--gold-lt:#c98f1a;--gold-dk:#8a5f04;
+  --gold-bg:rgba(173,120,5,0.09);--gold-bg2:rgba(173,120,5,0.16);
+  --white:#FFFFFF;--g200:#EEEEEE;--g300:#CCCCCC;--g500:#888888;--g700:#444444;
+  --red:#E53E3E;--red-bg:rgba(229,62,62,0.10);
+  --green:#38A169;--green-bg:rgba(56,161,105,0.10);
+  --warn:#D69E2E;--warn-bg:rgba(214,158,46,0.10);
+  --r:6px;--r-md:10px;--r-lg:14px;--r-pill:999px;
+  --sh-sm:0 2px 12px rgba(0,0,0,0.4);--sh-md:0 8px 32px rgba(0,0,0,0.5);
+  --sh-gold:0 0 28px rgba(173,120,5,0.20);
+  --t:all 0.22s ease;--font:'Inter',system-ui,sans-serif;--nav-h:64px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--black);color:var(--white);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.gold{color:var(--gold)}
+.container{max-width:1160px;margin:0 auto;padding:0 2rem}
+.rule{border:none;border-top:1px solid var(--border);margin:.75rem 0}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:var(--t)}
+.nav--scrolled{border-bottom-color:var(--border-gold);box-shadow:var(--sh-md)}
+.nav__inner{max-width:1160px;margin:0 auto;padding:0 2rem;height:100%;display:flex;align-items:center;gap:1.5rem}
+.nav__logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+.logo-crop{display:block;flex-shrink:0}
+.logo-crop img{display:block;height:42px;width:auto;mix-blend-mode:screen;pointer-events:none}
+.logo-crop--sm img{height:32px}
+.nav__links{display:flex;align-items:center;gap:1.4rem;margin-left:.5rem}
+.nav__links a{font-size:.82rem;font-weight:500;color:var(--g300);text-decoration:none;transition:var(--t)}
+.nav__links a:hover{color:var(--white)}
+.nav__link--gold{color:var(--gold)!important}
+.nav__actions{display:flex;align-items:center;gap:.75rem;margin-left:auto}
+.nav__mob{display:none;background:none;border:none;color:var(--white);font-size:1.1rem;cursor:pointer;padding:.3rem}
+@media(max-width:860px){.nav__links{display:none}.nav__actions .btn--outline-nav{display:none}.nav__mob{display:flex}}
+.mob-drawer{display:none;position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.7)}
+.mob-drawer.open{display:block}
+.mob-drawer__panel{position:absolute;top:0;right:0;width:80%;max-width:300px;height:100%;background:#111;border-left:1px solid rgba(173,120,5,.25);padding:1.5rem;display:flex;flex-direction:column;gap:.25rem;animation:slideIn .22s ease}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.mob-drawer__close{align-self:flex-end;background:none;border:none;color:#888;font-size:1.2rem;cursor:pointer;padding:.3rem;margin-bottom:.75rem}
+.mob-drawer__close:hover{color:#fff}
+.mob-drawer a{display:block;padding:.75rem .5rem;font-size:.95rem;font-weight:500;color:#ccc;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.06);transition:color .18s}
+.mob-drawer a:hover{color:#fff}
+.mob-drawer a.gold{color:var(--gold)}
+.mob-drawer__btns{margin-top:1rem;display:flex;flex-direction:column;gap:.6rem}
+.mob-drawer__btns .btn{width:100%;justify-content:center}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.62rem 1.35rem;border-radius:var(--r);font-family:var(--font);font-size:.82rem;font-weight:600;letter-spacing:.01em;cursor:pointer;border:none;text-decoration:none;white-space:nowrap;transition:var(--t)}
+.btn--gold{background:var(--gold);color:#fff;box-shadow:0 2px 16px rgba(173,120,5,.32)}
+.btn--gold:hover{background:var(--gold-lt);box-shadow:0 4px 24px rgba(173,120,5,.48);transform:translateY(-1px)}
+.btn--outline{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.25)}
+.btn--outline:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.05)}
+.btn--outline-nav{background:transparent;color:var(--g300);border:1px solid rgba(255,255,255,.18);font-size:.78rem}
+.btn--outline-nav:hover{border-color:rgba(255,255,255,.4);color:var(--white)}
+.btn--lg{padding:.78rem 1.7rem;font-size:.88rem}
+.btn--xl{padding:.9rem 2.2rem;font-size:.95rem}
+.btn--sm{padding:.45rem .9rem;font-size:.76rem}
+
+/* SECTIONS */
+.section{padding:6rem 0}
+.section--dark{background:var(--black-alt)}
+.section--black{background:var(--black)}
+.section-label{font-size:.66rem;font-weight:700;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem}
+.section-headline{font-size:clamp(1.75rem,3.5vw,2.65rem);font-weight:800;line-height:1.12;letter-spacing:-.02em;margin-bottom:.9rem}
+.section-sub{font-size:1rem;color:var(--g500);max-width:560px;line-height:1.7;margin-bottom:2.75rem}
+.step-nav{margin-top:2rem}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:var(--nav-h);position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 65% 40%,#1a1300 0%,#0A0A0A 65%)}
+.hero__grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(190,135,15,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(190,135,15,.03) 1px,transparent 1px);background-size:60px 60px}
+.hero__content{position:relative;z-index:2;padding:5rem 2rem}
+.eyebrow{display:inline-flex;align-items:center;border:1px solid var(--border-gold);color:var(--gold);background:var(--gold-bg);font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.38rem 1rem;border-radius:var(--r-pill);margin-bottom:1.75rem;text-transform:uppercase}
+.hero__h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:800;line-height:1.06;letter-spacing:-.03em;margin-bottom:1.4rem;max-width:720px}
+.hero__sub{font-size:clamp(.95rem,1.5vw,1.1rem);color:var(--g300);max-width:520px;line-height:1.72;margin-bottom:1.75rem}
+.hero__stats{display:flex;align-items:stretch;gap:0;margin-bottom:2rem;border:1px solid var(--border-gold);border-radius:var(--r-lg);background:rgba(173,120,5,0.06);overflow:hidden;width:fit-content;max-width:100%}
+.hstat{padding:.9rem 1.6rem;display:flex;flex-direction:column;gap:.2rem}
+.hstat__val{font-size:1.35rem;font-weight:800;color:var(--gold);letter-spacing:-.02em;line-height:1}
+.hstat__lbl{font-size:.71rem;color:var(--g500);line-height:1.4;max-width:160px}
+.hstat__div{width:1px;background:var(--border-gold);flex-shrink:0;align-self:stretch}
+@media(max-width:600px){.hero__stats{flex-direction:column;width:100%}.hstat__div{width:100%;height:1px}}
+.hero__ctas{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.hero__chips{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:.76rem;color:var(--g500);border:1px solid var(--border);border-radius:var(--r-md);padding:.55rem 1rem;width:fit-content;background:rgba(255,255,255,.02)}
+.hero__chips span{display:flex;align-items:center;gap:.35rem}
+.gdot{width:5px;height:5px;border-radius:50%;background:var(--gold);display:inline-block;flex-shrink:0}
+.cdiv{width:1px;height:14px;background:var(--border);flex-shrink:0}
+.hero__scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--g700);font-size:.9rem;animation:bob 2.5s ease infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* CARDS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:740px){.two-col{grid-template-columns:1fr}}
+.card{background:#1C1C1C;border:1px solid var(--border);border-radius:var(--r-lg);padding:1.75rem;box-shadow:var(--sh-sm)}
+.card--dark{background:var(--black-deep);border-color:var(--border-gold)}
+.card__hd{display:flex;align-items:center;gap:.55rem;font-size:.82rem;font-weight:700;letter-spacing:.03em;color:var(--g300);margin-bottom:1.4rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
+.card__icon{color:var(--g500);font-size:.9rem}
+.card__icon.gold{color:var(--gold)}
+
+/* FIELDS */
+.field{margin-bottom:1.25rem}
+.field label{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;color:var(--g300);margin-bottom:.5rem;letter-spacing:.01em}
+/* hide ALL native spinners globally */
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0;display:none}
+.field input,.field select,input[type=number],select{width:100%;padding:.6rem .85rem;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);background:var(--black-card);color:var(--white);font-family:var(--font);font-size:.9rem;outline:none;transition:var(--t)}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(190,135,15,.15)}
+select{cursor:pointer}
+
+/* CUSTOM STEPPER INPUT — nfield */
+.nfield{display:flex;align-items:stretch;border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);background:var(--black-card);overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.nfield:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(190,135,15,.13)}
+.nfield__btn{flex-shrink:0;width:42px;background:rgba(255,255,255,.04);border:none;border-right:1px solid rgba(255,255,255,.08);color:var(--g500);font-size:.7rem;cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;justify-content:center}
+.nfield__btn:last-child{border-right:none;border-left:1px solid rgba(255,255,255,.08)}
+.nfield__btn:hover{background:rgba(173,120,5,.14);color:var(--gold)}
+.nfield__btn:active{background:rgba(173,120,5,.22)}
+.nfield__inner{flex:1;display:flex;align-items:center;position:relative}
+.nfield__pre{color:var(--g500);font-size:.82rem;font-weight:600;padding-left:.85rem;flex-shrink:0;pointer-events:none}
+.nfield__suf{color:var(--g500);font-size:.82rem;font-weight:600;padding-right:.85rem;flex-shrink:0;pointer-events:none}
+.nfield__inner input{border:none!important;box-shadow:none!important;background:transparent;outline:none;color:var(--white);font-family:var(--font);font-size:1rem;font-weight:700;width:100%;padding:.7rem .5rem;min-width:0}
+.nfield__hint{font-size:.68rem;color:var(--g700);margin-top:.3rem;padding-left:.2rem}
+
+/* legacy ip/is wrappers (used in Step 3) */
+.ip,.is{display:flex;align-items:center;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);background:var(--black-card);overflow:hidden;transition:var(--t)}
+.ip:focus-within,.is:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(190,135,15,.15)}
+.ip input,.is input{border:none!important;box-shadow:none!important;flex:1;background:transparent}
+.affix{padding:.6rem .75rem;background:rgba(255,255,255,.05);color:var(--g500);font-size:.8rem;font-weight:600;border-right:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.is .affix{border-right:none;border-left:1px solid rgba(255,255,255,.08)}
+.ip.sm,.is.sm{max-width:160px}
+.opt{font-size:.62rem;background:rgba(255,255,255,.07);color:var(--g500);padding:.1rem .4rem;border-radius:3px;font-style:normal;font-weight:500}
+.atag{font-size:.62rem;background:var(--gold-bg);color:var(--gold);padding:.1rem .4rem;border-radius:3px;font-weight:600}
+.itag{font-size:.62rem;background:rgba(56,161,105,.15);color:#68D391;padding:.1rem .4rem;border-radius:3px;font-weight:600}
+
+/* Revenue breakdown mini-table */
+.rev-breakdown{margin-top:1.25rem;border:1px solid rgba(255,255,255,.06);border-radius:var(--r);overflow:hidden}
+.rev-bd-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem .85rem;font-size:.78rem;color:var(--g500);border-bottom:1px solid rgba(255,255,255,.04)}
+.rev-bd-row span:first-child{display:flex;align-items:center;gap:.45rem}
+.rev-bd-row span:first-child i{color:var(--g700);font-size:.7rem;width:12px}
+.rev-bd-row span:last-child{font-weight:600;color:var(--g300)}
+.rev-bd-row--total{background:rgba(173,120,5,.07);border-bottom:none}
+.rev-bd-row--total span:last-child{color:var(--gold);font-weight:700;font-size:.85rem}
+
+/* TOOLTIPS */
+.tip{position:relative;display:inline-flex;align-items:center;cursor:help}
+.tip i{color:rgba(255,255,255,.25);font-size:.7rem;transition:var(--t)}
+.tip:hover i{color:var(--gold)}
+.tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a1a;color:var(--g300);border:1px solid var(--border);border-radius:var(--r);padding:.5rem .75rem;font-size:.7rem;font-weight:400;line-height:1.5;width:200px;white-space:normal;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;box-shadow:var(--sh-md);text-align:left;font-style:normal;letter-spacing:0}
+.tip::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1a1a;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99}
+.tip:hover::after,.tip:hover::before{opacity:1}
+
+/* LIVE OUTPUT */
+.live-out{position:relative;overflow:hidden}
+.live-out::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(190,135,15,.06),transparent 70%);pointer-events:none}
+.out-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem 0}
+.out-lbl{font-size:.75rem;color:var(--g500);font-weight:500}
+.out-val{font-size:1.05rem;font-weight:700;color:var(--gold)}
+.out-val--lg{font-size:1.55rem;color:var(--gold-lt)}
+.insight{margin-top:1rem;padding:.7rem .9rem;background:var(--gold-bg);border-left:2px solid var(--gold);border-radius:0 var(--r) var(--r) 0;font-size:.76rem;color:var(--g300);display:flex;gap:.5rem}
+.insight i{color:var(--gold);flex-shrink:0;margin-top:2px}
+.insight strong{color:var(--gold-lt)}
+
+/* MODEL TOGGLE */
+.model-tog-wrap{display:inline-flex;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-pill);padding:.3rem;gap:.25rem;margin-bottom:1.75rem}
+.mtog{padding:.6rem 1.6rem;border-radius:var(--r-pill);border:none;cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:600;color:var(--g500);background:transparent;transition:var(--t);display:flex;align-items:center;gap:.4rem}
+.mtog:hover:not(.mtog--on){color:var(--g300)}
+.mtog--on{background:var(--gold);color:#fff;box-shadow:0 2px 12px rgba(173,120,5,.38)}
+.model-desc{display:flex;align-items:flex-start;gap:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:1.1rem 1.35rem;max-width:520px}
+.model-desc__icon{color:var(--gold);font-size:1.3rem;flex-shrink:0;margin-top:2px}
+.model-desc strong{display:block;font-size:.88rem;margin-bottom:.25rem}
+.model-desc p{font-size:.78rem;color:var(--g500);line-height:1.55}
+
+/* COST GRID */
+.cost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-bottom:1.5rem}
+@media(max-width:900px){.cost-grid{grid-template-columns:1fr}}
+.cb{background:#1C1C1C;border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem}
+.cb__hd{display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);padding-bottom:.75rem;border-bottom:1px solid var(--border);margin-bottom:.9rem;flex-wrap:wrap}
+.cb__hd i{color:var(--gold)}
+.cnote{font-size:.72rem;color:var(--g700);font-style:italic;margin-bottom:.65rem}
+.crow{display:flex;justify-content:space-between;align-items:center;padding:.48rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;color:var(--g300);gap:.5rem}
+.crow:last-child{border-bottom:none}
+.crow--edit{flex-wrap:wrap;flex-direction:column;align-items:flex-start;gap:.4rem}
+.crow--edit label{font-size:.76rem;color:var(--g500)}
+.crow.infra span:first-child{color:var(--g500);font-size:.78rem}
+.camt{font-weight:700;color:var(--g300);font-size:.82rem;white-space:nowrap}
+.camt.gold{color:var(--gold)}
+.camt em{font-style:normal;font-weight:400;color:var(--g700);font-size:.72rem}
+.crow.sub{margin-top:.4rem;padding-top:.6rem;border-top:1px solid var(--border);border-bottom:none}
+.crow.sub span:first-child{font-weight:600;color:var(--g300)}
+.computed{font-size:.7rem;color:var(--g700);font-style:italic}
+
+/* toggle switch */
+.tog-cost{display:flex;align-items:center;gap:.6rem}
+.tog{position:relative;display:inline-block;width:34px;height:19px;flex-shrink:0}
+.tog input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.tog__t{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:999px;cursor:pointer;transition:var(--t)}
+.tog__t::before{content:'';position:absolute;height:13px;width:13px;left:3px;top:3px;background:white;border-radius:50%;transition:var(--t)}
+.tog input:checked+.tog__t{background:var(--gold)}
+.tog input:checked+.tog__t::before{transform:translateX(15px)}
+/* visibility row dimmed when off */
+.vis-row--off{opacity:.4;transition:opacity .25s}
+/* ramp penalty colour */
+.camt.warn{color:#D4A843}
+
+/* ramp box */
+.ramp{margin-top:.9rem;padding:.85rem;background:var(--warn-bg);border:1px solid rgba(214,158,46,.2);border-radius:var(--r)}
+.ramp__hd{display:flex;align-items:center;gap:.4rem;font-size:.76rem;font-weight:700;color:var(--warn);margin-bottom:.3rem}
+.ramp p{font-size:.72rem;color:var(--g500);margin-bottom:.65rem;line-height:1.5}
+.ramp-row{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--g500)}
+.ramp-row select{width:auto;padding:.35rem .6rem;font-size:.76rem;border-color:rgba(214,158,46,.25)}
+
+/* total bar */
+.tbar{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#1a1200,#251900);border:1px solid var(--border-gold);border-radius:var(--r-md);padding:1.2rem 1.75rem;margin-bottom:1.5rem;box-shadow:var(--sh-gold)}
+.tbar__lbl{display:flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:700;letter-spacing:.06em;color:rgba(190,135,15,.8);text-transform:uppercase}
+.tbar__val{font-size:1.9rem;font-weight:800;color:var(--white);letter-spacing:-.03em}
+.tbar__mo{font-size:1rem;font-weight:400;color:rgba(255,255,255,.45);letter-spacing:0;margin-left:.15rem}
+
+/* active model banner */
+.model-active-bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;background:rgba(173,120,5,0.08);border:1px solid rgba(173,120,5,0.3);border-radius:var(--r-md);padding:.85rem 1.25rem;margin-bottom:2rem;transition:background .25s ease}
+.model-active-bar--1099{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12)}
+.model-active-bar__left{display:flex;align-items:center;gap:.65rem;font-size:.85rem;color:var(--g300)}
+.model-active-bar__left i{color:var(--gold);font-size:1rem}
+.model-active-bar--1099 .model-active-bar__left i{color:var(--g500)}
+.model-active-bar__left strong{color:var(--white);font-weight:700}
+.model-active-bar__right{flex-shrink:0}
+.model-active-bar__switch{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--g300);border-radius:var(--r);padding:.4rem .85rem;font-family:var(--font);font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.45rem;transition:var(--t)}
+.model-active-bar__switch:hover{border-color:var(--gold);color:var(--gold)}
+
+/* hidden costs */
+.hcosts{background:#141414;border:1px solid rgba(229,62,62,.15);border-radius:var(--r-lg);padding:1.5rem}
+.hcosts__hd{font-size:.72rem;font-weight:700;letter-spacing:.12em;color:#FC8181;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;margin-bottom:1.1rem}
+.hc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+@media(max-width:700px){.hc-grid{grid-template-columns:repeat(2,1fr)}}
+.hc{padding:.9rem .75rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:var(--r);text-align:center}
+.hc i{display:block;font-size:1.05rem;color:#FC8181;margin-bottom:.4rem}
+.hc strong{display:block;font-size:.72rem;color:var(--white);margin-bottom:.25rem;font-weight:600}
+.hc p{font-size:.68rem;color:var(--g500);line-height:1.45}
+
+/* mgmt list */
+.mglist{display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem}
+.mglist div{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--g500)}
+.mglist i{color:var(--gold);font-size:.68rem}
+
+/* OUTPUT PANELS */
+.out-tabs{display:flex;gap:.5rem;margin-bottom:1.75rem;flex-wrap:wrap}
+.otab{padding:.55rem 1.3rem;border-radius:var(--r-pill);border:1px solid var(--border);background:transparent;color:var(--g500);font-family:var(--font);font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:.35rem}
+.otab:hover:not(.otab--on){color:var(--g300);border-color:rgba(255,255,255,.2)}
+.otab--on{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:0 2px 12px rgba(173,120,5,.38)}
+.opanel{animation:fup .3s ease}
+@keyframes fup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:860px){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.metrics{grid-template-columns:1fr}}
+.met{background:#1C1C1C;border:1px solid var(--border);border-radius:var(--r-lg);padding:1.35rem 1.1rem;text-align:center;transition:var(--t)}
+.met:hover{transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.met--warn{border-color:rgba(229,62,62,.2)}
+.met--good{border-color:rgba(56,161,105,.25)}
+.met__ic{font-size:1.05rem;color:var(--gold);margin-bottom:.4rem}
+.met--warn .met__ic{color:#FC8181}
+.met--good .met__ic{color:#68D391}
+.met__lbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:.45rem}
+.met__val{font-size:1.45rem;font-weight:800;color:var(--white);letter-spacing:-.02em;transition:var(--t)}
+.met--warn .met__val{color:#FC8181}
+.met--good .met__val{color:#68D391}
+.met__val--neg{color:#FC8181!important}
+.effs{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:860px){.effs{grid-template-columns:repeat(2,1fr)}}
+.eff{background:var(--gold-bg);border:1px solid var(--border-gold);border-radius:var(--r-md);padding:1rem;text-align:center}
+.eff--good{background:var(--green-bg);border-color:rgba(56,161,105,.25)}
+.eff__lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:.35rem}
+.eff__val{font-size:1.15rem;font-weight:800;color:var(--gold-lt)}
+.eff--good .eff__val{color:#68D391}
+.becall{display:flex;align-items:flex-start;gap:.65rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:.9rem 1.1rem;font-size:.78rem;color:var(--g500)}
+.becall i{color:var(--gold);flex-shrink:0;margin-top:2px}
+.becall strong{color:var(--g300)}
+.becall--good{background:var(--green-bg);border-color:rgba(56,161,105,.2)}
+.becall--good i{color:#68D391}
+
+/* SLIDERS */
+.stress-r{display:flex;flex-direction:column;justify-content:center;gap:1.3rem}
+.sgrp{margin-bottom:1.35rem}
+.stop{display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem}
+.stop label{font-size:.78rem;font-weight:600;color:var(--g300)}
+.sbadge{font-size:.72rem;font-weight:700;background:var(--gold-bg);color:var(--gold);padding:.12rem .5rem;border-radius:4px}
+input[type=range]{width:100%;height:5px;border-radius:999px;appearance:none;-webkit-appearance:none;background:rgba(255,255,255,.1);border:none;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(173,120,5,.5);cursor:pointer;transition:var(--t)}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.sends{display:flex;justify-content:space-between;font-size:.62rem;color:var(--g700);margin-top:.22rem}
+.si{margin-bottom:.5rem}
+.srow{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--g500);margin-bottom:.38rem}
+.srow i{margin-right:.25rem}
+.sval{font-size:.9rem;font-weight:700;color:var(--gold);transition:var(--t)}
+.sval--neg{color:#FC8181!important}
+.strack{height:6px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-bottom:.75rem}
+.sfill{height:100%;background:var(--gold-dk);border-radius:999px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.sfill--med{background:var(--gold)}
+.sfill--best{background:var(--gold-lt)}
+.srev{font-size:.72rem;color:var(--g700);text-align:center;padding-top:.5rem;border-top:1px solid var(--border)}
+.srev strong{color:var(--gold)}
+
+/* COMPARISON TABLE */
+.tw{overflow-x:auto;border-radius:var(--r-lg);margin-bottom:1.5rem;box-shadow:var(--sh-md)}
+.ctbl{width:100%;border-collapse:collapse;background:#141414;font-size:.82rem}
+.ctbl th{padding:.85rem 1.1rem;text-align:left;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);background:#111111;border-bottom:1px solid var(--border)}
+.ctbl td{padding:.85rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.ctbl tr:last-child td{border-bottom:none}
+.tr--gold td{background:var(--gold-bg)}
+.bdg{display:inline-flex;align-items:center;gap:.35rem;padding:.28rem .65rem;border-radius:5px;font-size:.74rem;font-weight:700}
+.bdg--w2{background:rgba(229,62,62,.12);color:#FC8181}
+.bdg--1099{background:rgba(214,158,46,.12);color:var(--warn)}
+.bdg--mg{background:var(--gold-bg);color:var(--gold)}
+.cbdg{font-size:.76rem;font-weight:700;padding:.25rem .6rem;border-radius:5px;white-space:nowrap}
+.cbdg--hi{background:rgba(229,62,62,.12);color:#FC8181}
+.cbdg--med{background:rgba(214,158,46,.12);color:var(--warn)}
+.cbdg--lo{background:var(--gold-bg);color:var(--gold)}
+.pill{display:inline-block;padding:.22rem .6rem;border-radius:4px;font-size:.72rem;white-space:nowrap;font-weight:500}
+.pill--neu{background:rgba(255,255,255,.06);color:var(--g300)}
+.pill--bad{background:rgba(229,62,62,.1);color:#FC8181}
+.pill--mid{background:rgba(214,158,46,.1);color:var(--warn)}
+.pill--good{background:rgba(56,161,105,.12);color:#68D391}
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media(max-width:580px){.risk-grid{grid-template-columns:1fr}}
+.rcard{background:#1C1C1C;border:1px solid var(--border);border-radius:var(--r-lg);padding:1.35rem}
+.rcard__hd{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);display:flex;align-items:center;gap:.4rem;margin-bottom:1rem}
+.rcard__hd i{color:var(--gold)}
+.rrows{display:flex;flex-direction:column;gap:.55rem}
+.rrow{display:flex;justify-content:space-between;font-size:.82rem;color:var(--g500)}
+.rval{font-weight:700;color:var(--g300)}
+.rval--bad{color:#FC8181}
+.rval--good{color:var(--gold)}
+
+/* CTA */
+.cta-sec{text-align:center;border-top:1px solid var(--border)}
+.cta-inner{max-width:700px;margin:0 auto}
+.cta-h{font-size:clamp(1.9rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:.3rem}
+.cta-h--gold{color:var(--gold);margin-bottom:1.25rem}
+.cta-sub{font-size:1rem;color:var(--g500);margin-bottom:2.25rem}
+.snap-row{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.25rem;flex-wrap:wrap;background:#141414;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.snap{padding:1.1rem 1.75rem;text-align:center;flex:1;min-width:140px}
+.snap-div{width:1px;height:60px;background:var(--border);flex-shrink:0}
+.snap__lbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;color:var(--g500);text-transform:uppercase;margin-bottom:.35rem}
+.snap__val{font-size:1.2rem;font-weight:800;color:var(--white)}
+.snap__val--dim{color:#FC8181}
+.snap__val--gold{color:var(--gold)}
+.cta-dis{margin-top:.9rem;font-size:.72rem;color:var(--g700)}
+.export-wrap{margin-top:2rem;display:flex;flex-direction:column;align-items:center;gap:.85rem}
+.export-form{display:none;flex-direction:column;gap:.75rem;width:100%;max-width:420px}
+.export-form.open{display:flex}
+.export-field{display:flex;flex-direction:column;gap:.3rem}
+.export-field label{font-size:.74rem;font-weight:600;color:var(--g300)}
+.export-field input{padding:.65rem 1rem;border-radius:var(--r);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--white);font-family:var(--font);font-size:.86rem;width:100%;outline:none;transition:border-color .18s}
+.export-field input::placeholder{color:var(--g700)}
+.export-field input:focus{border-color:var(--gold);background:rgba(255,255,255,.08)}
+.export-field input.err{border-color:#FC8181}
+.export-submit{width:100%;justify-content:center}
+.export-ok{color:#68D391;font-size:.84rem;display:none;align-items:center;gap:.4rem;text-align:center}
+.export-ok.show{display:flex}
+.export-sending{opacity:.6;pointer-events:none}
+
+/* FOOTER */
+.footer{background:var(--black);border-top:1px solid var(--border);padding:1.75rem 0}
+.footer__in{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer__copy{font-size:.72rem;color:var(--g700)}
+.footer__lnk{font-size:.74rem;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:.3rem;transition:var(--t)}
+.footer__lnk:hover{color:var(--gold-lt)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .section{padding:4rem 0}.hero__content{padding:4rem 1.5rem}
+  .snap-row{flex-direction:column}.snap-div{width:100%;height:1px}
+  .tbar{flex-direction:column;gap:.5rem;text-align:center}
+}
+
+/* TRANSITIONS */
+.met__val,.out-val,.sval,.tbar__val,.eff__val,.snap__val,.rval{transition:all .25s ease}
+
+/* ADVANCED MODE */
+.adv-toggle-bar{background:#111;border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:1.5rem 1.75rem;display:flex;flex-wrap:wrap;gap:0;align-items:stretch;margin-bottom:1.5rem}
+.adv-tog-item{display:flex;align-items:flex-start;gap:1rem;flex:1;min-width:260px;padding:.25rem 1.75rem .25rem 0}
+.adv-tog-item+.adv-tog-item{padding-left:1.75rem;padding-right:0;border-left:1px solid rgba(255,255,255,.07)}
+.adv-tog-item__text{display:flex;flex-direction:column;gap:.35rem;padding-top:.15rem}
+.adv-tog-item__label{font-size:.84rem;font-weight:700;color:var(--white);display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;line-height:1.3}
+.adv-tog-item__sub{font-size:.72rem;color:var(--g500);line-height:1.5;max-width:340px}
+.adv-badge{font-size:.58rem;font-weight:700;letter-spacing:.12em;padding:.2rem .55rem;border-radius:3px;text-transform:uppercase;flex-shrink:0;display:inline-flex;align-items:center}
+.adv-badge--reality{background:rgba(173,120,5,.22);color:var(--gold);border:1px solid rgba(173,120,5,.3)}
+.adv-badge--risk{background:rgba(229,62,62,.18);color:#FC8181;border:1px solid rgba(229,62,62,.28)}
+.big-tog{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0;margin-top:.1rem}
+.big-tog input{opacity:0;width:0;height:0;position:absolute}
+.big-tog__track{width:44px;height:24px;border-radius:999px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);transition:var(--t);display:flex;align-items:center;padding:3px;box-shadow:inset 0 1px 3px rgba(0,0,0,.4)}
+.big-tog__thumb{width:16px;height:16px;border-radius:50%;background:#666;box-shadow:0 1px 3px rgba(0,0,0,.5);transition:var(--t);flex-shrink:0}
+.big-tog input:checked~.big-tog__track{background:var(--gold);border-color:var(--gold-lt);box-shadow:0 0 10px rgba(173,120,5,.35)}
+.big-tog input:checked~.big-tog__track .big-tog__thumb{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transform:translateX(20px)}
+.big-tog--risk input:checked~.big-tog__track{background:#E53E3E;border-color:#FC8181;box-shadow:0 0 10px rgba(229,62,62,.3)}
+.adv-panel{display:none;animation:fup .3s ease}
+.adv-panel.open{display:block}
+.adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
+@media(max-width:900px){.adv-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.adv-grid{grid-template-columns:1fr}}
+.adv-card{background:#181818;border:1px solid rgba(173,120,5,.2);border-radius:var(--r-lg);padding:1.2rem}
+.adv-card--risk{border-color:rgba(229,62,62,.18);background:#130d0d}
+.adv-card__hd{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.4rem;margin-bottom:1rem;padding-bottom:.65rem;border-bottom:1px solid rgba(173,120,5,.15)}
+.adv-card--risk .adv-card__hd{color:#FC8181;border-bottom-color:rgba(229,62,62,.12)}
+.adv-card__hd i{font-size:.78rem}
+.adv-row{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.9rem}
+.adv-row:last-child{margin-bottom:0}
+.adv-row label{font-size:.74rem;font-weight:600;color:var(--g300);display:flex;align-items:center;gap:.35rem}
+.adv-sl-wrap{display:flex;flex-direction:column;gap:.2rem}
+.adv-sl-top{display:flex;justify-content:space-between;align-items:center}
+.adv-sl-top label{font-size:.74rem;font-weight:600;color:var(--g300)}
+.adv-val-badge{font-size:.74rem;font-weight:700;color:var(--gold);background:rgba(173,120,5,.12);padding:.1rem .45rem;border-radius:4px;min-width:42px;text-align:center}
+.adv-val-badge--risk{color:#FC8181;background:rgba(229,62,62,.1)}
+.adv-sl-ends{display:flex;justify-content:space-between;font-size:.6rem;color:var(--g700);margin-top:.15rem}
+.stl-opts{display:flex;flex-direction:column;gap:.45rem;margin-top:.2rem}
+.stl-opt{display:flex;align-items:center;gap:.55rem;cursor:pointer}
+.stl-opt input[type=radio]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.stl-opt__label{font-size:.78rem;color:var(--g300)}
+.stl-opt__label em{font-size:.68rem;color:var(--g500);font-style:normal;margin-left:.3rem}
+.adv-inline{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.adv-inline input[type=number]{width:90px;padding:.5rem .65rem;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);background:var(--black-card);color:var(--white);font-family:var(--font);font-size:.84rem;outline:none;-moz-appearance:textfield}
+.adv-inline input[type=number]::-webkit-inner-spin-button{opacity:.4}
+.adv-inline input[type=number]:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(173,120,5,.15)}
+.adv-inline span{font-size:.74rem;color:var(--g500)}
+.adj-block{display:none;margin-top:1rem;border:1px solid rgba(173,120,5,.22);border-radius:var(--r-lg);overflow:hidden;animation:fup .3s ease}
+.adj-block.show{display:block}
+.adj-block--risk{border-color:rgba(229,62,62,.2)}
+.adj-hd{display:flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);background:rgba(173,120,5,.07);border-bottom:1px solid rgba(173,120,5,.15)}
+.adj-hd--risk{color:#FC8181;background:rgba(229,62,62,.06);border-bottom-color:rgba(229,62,62,.12)}
+.adj-hd i{font-size:.76rem}
+.adj-rows{padding:.65rem 1.1rem;display:flex;flex-direction:column;gap:.1rem;background:#0f0f0f}
+.adj-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.78rem;color:var(--g500)}
+.adj-row:last-child{border-bottom:none}
+.adj-row strong{color:var(--g300);font-size:.8rem}
+.adj-row--total{padding-top:.65rem;margin-top:.25rem;border-top:1px solid rgba(255,255,255,.08)!important;border-bottom:none!important}
+.adj-row--total strong{color:var(--white);font-size:.84rem}
+.adj-num{font-weight:700;font-size:.82rem;color:var(--gold)}
+.adj-num--neg{color:#FC8181!important}
+.adj-num--good{color:#68D391!important}
+.adj-num--warn{color:var(--warn)!important}
+.mode-banner{display:none;align-items:center;gap:.65rem;padding:.6rem 1.1rem;border-radius:var(--r);font-size:.74rem;font-weight:600;margin-bottom:1.25rem}
+.mode-banner.show{display:flex}
+.mode-banner--reality{background:rgba(173,120,5,.1);border:1px solid rgba(173,120,5,.25);color:var(--gold)}
+.mode-banner--risk{background:rgba(229,62,62,.08);border:1px solid rgba(229,62,62,.2);color:#FC8181}
+.mode-banner i{font-size:.8rem}
+
+/* BOOKING MODAL */
+.bk-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.94);backdrop-filter:blur(6px);flex-direction:column;overflow:hidden}
+.bk-overlay.open{display:flex}
+.bk-topbar{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.5rem;background:#111111;border-bottom:2px solid rgba(173,120,5,.4);flex-shrink:0;min-height:60px}
+.bk-topbar__title{font-size:1.05rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:.55rem}
+.bk-topbar__title i{color:var(--gold)}
+.bk-topbar__sub{font-size:.78rem;color:#888;margin-top:.15rem}
+.bk-close{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:6px;cursor:pointer;color:#bbb;font-size:.88rem;padding:.45rem 1rem;display:flex;align-items:center;gap:.4rem;transition:all .18s;font-family:var(--font);flex-shrink:0}
+.bk-close:hover{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.1)}
+.bk-body{flex:1 1 0;overflow:hidden;display:flex;background:#0a0a0a;padding:0}
+.bk-inner{flex:1;display:flex;flex-direction:column;width:100%;max-width:960px;margin:0 auto;background:#0a0a0a}
+.bk-inner .meetings-iframe-container{flex:1;display:flex!important;flex-direction:column;width:100%!important;height:100%!important;min-height:calc(100vh - 60px)}
+.bk-inner .meetings-iframe-container iframe{flex:1;width:100%!important;height:100%!important;min-height:calc(100vh - 60px);border:none!important;display:block}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="site-nav">
+  <div class="nav__inner">
+    <a href="https://www.metagrowth.ventures" target="_blank" rel="noopener" class="nav__logo" aria-label="MetaGrowth Ventures">
+      <span class="logo-crop"><img src="logo.png" alt="MetaGrowth Ventures"/></span>
+    </a>
+    <nav class="nav__links" aria-label="Site navigation">
+      <a href="https://www.metagrowth.ventures" target="_blank" rel="noopener">Home</a>
+      <a href="https://www.metagrowth.ventures/solutions" target="_blank" rel="noopener">Solutions</a>
+      <a href="https://www.metagrowth.ventures/how-we-work" target="_blank" rel="noopener">How We Work</a>
+      <a href="https://www.metagrowth.ventures/assessment" target="_blank" rel="noopener" class="nav__link--gold">Free Assessment</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="https://meetings.hubspot.com/josh549/revenue-audit" target="_blank" rel="noopener" class="btn btn--outline-nav">Login</a>
+      <button onclick="openBooking()" class="btn btn--gold"><i class="fas fa-calendar-check" aria-hidden="true"></i> Book a Strategy Call</button>
+    </div>
+    <button class="nav__mob" id="mob-btn" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mob-drawer" aria-label="Mobile navigation">
+  <div class="mob-drawer__panel">
+    <button class="mob-drawer__close" onclick="closeMobDrawer()" aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+    <a href="https://www.metagrowth.ventures" target="_blank" rel="noopener" onclick="closeMobDrawer()">Home</a>
+    <a href="https://www.metagrowth.ventures/solutions" target="_blank" rel="noopener" onclick="closeMobDrawer()">Solutions</a>
+    <a href="https://www.metagrowth.ventures/how-we-work" target="_blank" rel="noopener" onclick="closeMobDrawer()">How We Work</a>
+    <a href="https://www.metagrowth.ventures/assessment" target="_blank" rel="noopener" class="gold" onclick="closeMobDrawer()">Free Assessment</a>
+    <div class="mob-drawer__btns">
+      <a href="https://meetings.hubspot.com/josh549/revenue-audit" target="_blank" rel="noopener" class="btn btn--outline" onclick="closeMobDrawer()">Login</a>
+      <button class="btn btn--gold" onclick="closeMobDrawer();openBooking();"><i class="fas fa-calendar-check"></i> Book a Strategy Call</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero" class="hero" aria-labelledby="hero-headline">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="container hero__content">
+    <div class="eyebrow"><i class="fas fa-calculator" aria-hidden="true" style="margin-right:.4rem"></i>ROI CALCULATOR &nbsp;·&nbsp; BUILD VS BUY ANALYSIS</div>
+    <h1 class="hero__h1" id="hero-headline">Build vs Buy Your<br><span class="gold">Sales Engine</span></h1>
+    <p class="hero__sub">See the real cost, ramp time, and profitability of hiring a salesperson vs plugging into a fully built revenue system.</p>
+    <div class="hero__stats" role="presentation">
+      <div class="hstat"><div class="hstat__val">30–60%</div><div class="hstat__lbl">avg. cost underestimate when building in-house</div></div>
+      <div class="hstat__div" aria-hidden="true"></div>
+      <div class="hstat"><div class="hstat__val">3–6 mo</div><div class="hstat__lbl">ramp time before a W2 rep generates revenue</div></div>
+      <div class="hstat__div" aria-hidden="true"></div>
+      <div class="hstat"><div class="hstat__val">76%</div><div class="hstat__lbl">of 1099 contractors never produce a single deal</div></div>
+    </div>
+    <div class="hero__ctas">
+      <button class="btn btn--gold btn--lg" onclick="smoothScroll('revenue-inputs')"><i class="fas fa-calculator" aria-hidden="true"></i> Calculate Your Numbers</button>
+      <button onclick="openBooking()" class="btn btn--outline btn--lg"><i class="fas fa-calendar-check" aria-hidden="true"></i> Book a Strategy Call</button>
+    </div>
+    <div class="hero__chips" aria-label="Calculator covers">
+      <span><span class="gdot" aria-hidden="true"></span>Revenue Architecture</span>
+      <span class="cdiv" aria-hidden="true"></span>
+      <span><span class="gdot" aria-hidden="true"></span>Cost Modeling</span>
+      <span class="cdiv" aria-hidden="true"></span>
+      <span><span class="gdot" aria-hidden="true"></span>Profit Clarity</span>
+      <span class="cdiv" aria-hidden="true"></span>
+      <span><span class="gdot" aria-hidden="true"></span>Risk Analysis</span>
+    </div>
+  </div>
+  <div class="hero__scroll" aria-hidden="true"><i class="fas fa-chevron-down"></i></div>
+</section>
+
+<!-- STEP 01: REVENUE INPUTS -->
+<section id="revenue-inputs" class="section section--dark" aria-labelledby="rev-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">STEP 01 &nbsp;/&nbsp; REVENUE MODEL</div>
+    <h2 class="section-headline" id="rev-headline">Start With Your <span class="gold">Revenue Model</span></h2>
+    <p class="section-sub">Anchor your analysis in what your business actually produces each month.</p>
+    <div class="two-col">
+
+      <!-- LEFT: Inputs -->
+      <div class="card" role="form" aria-label="Revenue inputs">
+        <div class="card__hd"><i class="fas fa-sliders card__icon gold" aria-hidden="true"></i> Your Inputs</div>
+
+        <!-- Average Deal Size -->
+        <div class="field">
+          <label for="deal-size">Average Deal Size <span class="tip" data-tip="The average revenue you receive per closed deal."><i class="fas fa-circle-info" aria-hidden="true"></i></span></label>
+          <div class="nfield">
+            <button class="nfield__btn" type="button" aria-label="Decrease deal size" onclick="stepInput('deal-size',-500,100)"><i class="fas fa-minus"></i></button>
+            <div class="nfield__inner">
+              <span class="nfield__pre">$</span>
+              <input type="number" id="deal-size" value="5000" min="100" step="500" inputmode="numeric"/>
+            </div>
+            <button class="nfield__btn" type="button" aria-label="Increase deal size" onclick="stepInput('deal-size',500)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="nfield__hint">e.g. $2,500 · $5,000 · $10,000+</div>
+        </div>
+
+        <!-- Deals Per Month -->
+        <div class="field">
+          <label for="deals-per-month">Deals Closed Per Month</label>
+          <div class="nfield">
+            <button class="nfield__btn" type="button" aria-label="Decrease deals" onclick="stepInput('deals-per-month',-1,1)"><i class="fas fa-minus"></i></button>
+            <div class="nfield__inner">
+              <input type="number" id="deals-per-month" value="4" min="1" max="50" step="1" inputmode="numeric" style="text-align:center"/>
+            </div>
+            <button class="nfield__btn" type="button" aria-label="Increase deals" onclick="stepInput('deals-per-month',1)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="nfield__hint">How many deals does your team close monthly?</div>
+        </div>
+
+        <!-- Sales Cycle -->
+        <div class="field">
+          <label for="sales-cycle">Sales Cycle <span class="tip" data-tip="Average months from first contact to close. Used for context only — does not affect cost calculations."><i class="fas fa-circle-info" aria-hidden="true"></i></span></label>
+          <div class="nfield">
+            <button class="nfield__btn" type="button" aria-label="Decrease months" onclick="stepInput('sales-cycle',-1,1)"><i class="fas fa-minus"></i></button>
+            <div class="nfield__inner">
+              <input type="number" id="sales-cycle" value="2" min="1" max="24" step="1" inputmode="numeric" style="text-align:center"/>
+              <span class="nfield__suf">mo</span>
+            </div>
+            <button class="nfield__btn" type="button" aria-label="Increase months" onclick="stepInput('sales-cycle',1)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <!-- Close Rate -->
+        <div class="field">
+          <label for="close-rate">Close Rate <em class="opt">optional</em> <span class="tip" data-tip="What % of qualified leads do you typically close? Used to calculate leads needed per month."><i class="fas fa-circle-info" aria-hidden="true"></i></span></label>
+          <div class="nfield">
+            <button class="nfield__btn" type="button" aria-label="Decrease close rate" onclick="stepInput('close-rate',-5,1)"><i class="fas fa-minus"></i></button>
+            <div class="nfield__inner">
+              <input type="number" id="close-rate" value="20" min="1" max="100" step="1" inputmode="numeric" style="text-align:center"/>
+              <span class="nfield__suf">%</span>
+            </div>
+            <button class="nfield__btn" type="button" aria-label="Increase close rate" onclick="stepInput('close-rate',5,1,100)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="nfield__hint">Industry avg: 15–25%</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Live estimate -->
+      <div class="card card--dark live-out" aria-live="polite" aria-label="Live revenue estimate">
+        <div class="card__hd"><i class="fas fa-chart-bar card__icon gold" aria-hidden="true"></i> Live Revenue Estimate</div>
+
+        <div class="out-row">
+          <span class="out-lbl">Estimated Monthly Revenue</span>
+          <span class="out-val out-val--lg" id="monthly-revenue">$20,000</span>
+        </div>
+        <div class="rule"></div>
+        <div class="out-row">
+          <span class="out-lbl">Estimated Annual Revenue</span>
+          <span class="out-val" id="annual-revenue">$240,000</span>
+        </div>
+        <div class="rule"></div>
+        <div class="out-row">
+          <span class="out-lbl">Leads Needed / Month</span>
+          <span class="out-val" id="leads-needed">20</span>
+        </div>
+
+        <div class="insight">
+          <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          <span>At a <strong id="cr-inline">20%</strong> close rate you need <strong id="leads-inline">20 leads</strong> to close <strong id="deals-inline">4 deals</strong>/month.</span>
+        </div>
+
+        <!-- Mini breakdown -->
+        <div class="rev-breakdown">
+          <div class="rev-bd-row">
+            <span><i class="fas fa-handshake" aria-hidden="true"></i> Deal Size</span>
+            <span id="bd-deal-size">$5,000</span>
+          </div>
+          <div class="rev-bd-row">
+            <span><i class="fas fa-times" aria-hidden="true"></i> Deals / Month</span>
+            <span id="bd-deals-mo">4</span>
+          </div>
+          <div class="rev-bd-row rev-bd-row--total">
+            <span><i class="fas fa-equals" aria-hidden="true"></i> Monthly Revenue</span>
+            <span id="bd-rev-total">$20,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn--gold" onclick="smoothScroll('team-structure')">Next: Choose Your Model <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 02: TEAM STRUCTURE -->
+<section id="team-structure" class="section section--black" aria-labelledby="team-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">STEP 02 &nbsp;/&nbsp; TEAM STRUCTURE</div>
+    <h2 class="section-headline" id="team-headline">How Are You Planning <span class="gold">to Build This?</span></h2>
+    <p class="section-sub">Your cost structure changes dramatically depending on how you staff your sales function.</p>
+    <div class="model-tog-wrap" role="group" aria-label="Hiring model selector">
+      <button class="mtog mtog--on" id="btn-w2" onclick="setModel('w2')" aria-pressed="true"><i class="fas fa-id-badge" aria-hidden="true"></i> W2 Sales Rep</button>
+      <button class="mtog" id="btn-1099" onclick="setModel('1099')" aria-pressed="false"><i class="fas fa-file-contract" aria-hidden="true"></i> 1099 Contractor</button>
+    </div>
+    <div class="model-desc" id="model-desc" aria-live="polite">
+      <div class="model-desc__icon"><i class="fas fa-user-tie" aria-hidden="true"></i></div>
+      <div><strong>W2 Full-Time Employee</strong><p>You hire, manage, and cover full payroll. Higher fixed costs and longer ramp time, but more control over activity, process, and culture.</p></div>
+    </div>
+    <div class="step-nav" style="margin-top:2rem">
+      <button class="btn btn--gold btn--lg" onclick="setModel(S.model);smoothScroll('cost-breakdown')"><i class="fas fa-calculator" aria-hidden="true"></i> See Your Cost Breakdown</button>
+      <p style="margin-top:.75rem;font-size:.78rem;color:var(--g500)">Step 03 updates live based on your selection above.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 03: COST BREAKDOWN -->
+<section id="cost-breakdown" class="section section--dark" aria-labelledby="cost-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">STEP 03 &nbsp;/&nbsp; COST BREAKDOWN</div>
+
+    <div class="model-active-bar" id="model-active-bar" aria-live="polite">
+      <div class="model-active-bar__left">
+        <i class="fas fa-id-badge" id="model-active-icon" aria-hidden="true"></i>
+        <span>Showing costs for: <strong id="model-active-name">W2 Sales Rep</strong></span>
+      </div>
+      <div class="model-active-bar__right">
+        <button class="model-active-bar__switch" onclick="setModel(S.model==='w2'?'1099':'w2')" aria-label="Switch model">Switch Model <i class="fas fa-arrow-right-arrow-left" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <!-- W2 VIEW -->
+    <div id="w2-view">
+      <h2 class="section-headline" id="cost-headline">What It Actually Costs to Hire a <span class="gold">W2 Salesperson</span></h2>
+      <p class="section-sub">This includes the costs most companies don't account for upfront — before a single deal closes.</p>
+
+      <div class="cost-grid">
+        <!-- Salesperson Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-user-tie" aria-hidden="true"></i> Salesperson Cost</div>
+          <div class="crow crow--edit">
+            <label for="base-salary">Base Salary (annual)</label>
+            <div class="ip sm"><span class="affix" aria-hidden="true">$</span><input type="number" id="base-salary" value="80000" min="30000" step="1000"/></div>
+            <span class="computed" id="salary-mo">= $6,667/mo</span>
+          </div>
+          <div class="crow">
+            <span>Benefits <span class="tip" data-tip="Health, dental, vision — industry average ~$750/mo."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span>
+            <span class="camt">$750<em>/mo</em></span>
+          </div>
+          <div class="crow">
+            <span>Payroll Taxes <span class="atag">7.65% auto</span></span>
+            <span class="camt" id="payroll-tax">$510<em>/mo</em></span>
+          </div>
+          <div class="crow sub">
+            <span>Salesperson Subtotal</span>
+            <span class="camt gold" id="w2-people-sub">$7,927<em>/mo</em></span>
+          </div>
+          <div class="ramp">
+            <div class="ramp__hd"><i class="fas fa-hourglass-half" aria-hidden="true"></i> Ramp Reality</div>
+            <p>Expect 20–50% output for the first 3–6 months — at full salary. Ramp cost is amortized into the monthly total.</p>
+            <div class="ramp-row">
+              <label for="ramp-months">Ramp Period:</label>
+              <select id="ramp-months">
+                <option value="3">3 months</option>
+                <option value="4">4 months</option>
+                <option value="5" selected>5 months</option>
+                <option value="6">6 months</option>
+              </select>
+            </div>
+            <div class="crow infra" style="margin-top:.6rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07)">
+              <span>Ramp Penalty <span class="atag">amortized</span></span>
+              <span class="camt warn" id="w2-ramp-mo">$1,250<em>/mo</em></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infrastructure Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-server" aria-hidden="true"></i> Infrastructure Required</div>
+          <div class="crow infra"><span>CRM (GHL) <span class="tip" data-tip="GoHighLevel — pipeline, contacts, sequences."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$297<em>/mo</em></span></div>
+          <div class="crow infra"><span>Email Infrastructure <span class="tip" data-tip="Dedicated sending domains, mailboxes, warmup."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$997<em>/mo</em></span></div>
+          <div class="crow infra"><span>Data + Enrichment <span class="tip" data-tip="Apollo / Seamless.ai — verified leads."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$350<em>/mo</em></span></div>
+          <div class="crow infra"><span>LinkedIn Sales Nav <span class="tip" data-tip="Advanced LinkedIn prospecting, InMail credits."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$99<em>/mo</em></span></div>
+          <div class="crow infra"><span>Dialer + Calling <span class="tip" data-tip="Power dialer, call recording, voicemail drops."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$50<em>/mo</em></span></div>
+          <div class="crow infra"><span>Automation + AI Tools <span class="tip" data-tip="Sequence automation, AI copywriting."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span><span class="camt">$100<em>/mo</em></span></div>
+          <div class="crow sub"><span>Infrastructure Subtotal</span><span class="camt gold">$1,893<em>/mo</em></span></div>
+        </div>
+
+        <!-- Visibility + Management Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-eye" aria-hidden="true"></i> Visibility Layer <em class="opt">Optional</em></div>
+          <div class="crow" id="w2-vis-row">
+            <span>AI Visibility (LLM SEO) <span class="tip" data-tip="Ensures your brand appears in AI-generated answers — ChatGPT, Perplexity, Gemini. $1,000/mo."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span>
+            <div class="tog-cost">
+              <label class="tog" aria-label="Toggle AI Visibility"><input type="checkbox" id="w2-visibility" checked/><span class="tog__t"></span></label>
+              <span class="camt" id="w2-vis-amt">$1,000<em>/mo</em></span>
+            </div>
+          </div>
+          <div class="cb__hd" style="margin-top:1.5rem"><i class="fas fa-sitemap" aria-hidden="true"></i> Management Cost <span class="tip" data-tip="Sales leadership, pipeline reviews, coaching time."><i class="fas fa-circle-info" aria-hidden="true"></i></span></div>
+          <p class="cnote">Most companies forget this line item entirely.</p>
+          <div class="crow">
+            <label for="mgmt-cost">Sales Leadership / Oversight</label>
+            <select id="mgmt-cost">
+              <option value="2000">$2,000/mo</option>
+              <option value="3500" selected>$3,500/mo</option>
+              <option value="5000">$5,000/mo</option>
+            </select>
+          </div>
+          <div class="crow sub">
+            <span>Visibility + Mgmt Subtotal</span>
+            <span class="camt gold" id="w2-vismgmt-sub">$4,500<em>/mo</em></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- W2 Total Bar -->
+      <div class="tbar" aria-live="polite">
+        <div class="tbar__lbl"><i class="fas fa-calculator" aria-hidden="true"></i> True Monthly Cost (W2) <span class="tip" data-tip="Salary + benefits + taxes + infrastructure + visibility + management + ramp amortized."><i class="fas fa-circle-info" aria-hidden="true"></i></span></div>
+        <div class="tbar__val" id="w2-total">$15,570<span class="tbar__mo">/mo</span></div>
+      </div>
+      <div class="step-nav" style="margin-top:1.5rem">
+        <button class="btn btn--gold" onclick="smoothScroll('your-numbers')">See My Results <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+      </div>
+
+      <!-- Hidden Costs -->
+      <div class="hcosts">
+        <div class="hcosts__hd"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Hidden Costs Most People Miss</div>
+        <div class="hc-grid">
+          <div class="hc"><i class="fas fa-hourglass-half" aria-hidden="true"></i><strong>Ramp Inefficiency</strong><p>3–6 months of full salary for 20–50% productivity output</p></div>
+          <div class="hc"><i class="fas fa-user-xmark" aria-hidden="true"></i><strong>Bad Hire Risk</strong><p>A bad hire costs 6–12× monthly salary including replacement costs</p></div>
+          <div class="hc"><i class="fas fa-trash-can" aria-hidden="true"></i><strong>Lead Waste</strong><p>Poor messaging burns expensive data and damages brand goodwill</p></div>
+          <div class="hc"><i class="fas fa-clock" aria-hidden="true"></i><strong>Your Time Cost</strong><p>Hiring, onboarding, managing — all founder or leadership hours lost</p></div>
+        </div>
+      </div>
+    </div><!-- /#w2-view -->
+
+    <!-- 1099 VIEW -->
+    <div id="view-1099" style="display:none">
+      <h2 class="section-headline">What It Looks Like With a <span class="gold">1099 Contractor</span></h2>
+      <p class="section-sub">Lower fixed cost — but still requires infrastructure and oversight to consistently perform.</p>
+
+      <div class="cost-grid">
+        <!-- Commission Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-file-contract" aria-hidden="true"></i> Salesperson Cost</div>
+          <div class="crow crow--edit">
+            <label for="commission-rate">Commission Rate</label>
+            <div class="is sm"><input type="number" id="commission-rate" value="20" min="10" max="35" step="1"/><span class="affix" aria-hidden="true">%</span></div>
+          </div>
+          <div class="crow">
+            <span>Commission Est. (monthly) <span class="tip" data-tip="Monthly revenue × your commission rate."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span>
+            <span class="camt gold" id="commission-est">$4,000<em>/mo</em></span>
+          </div>
+          <div class="crow crow--edit">
+            <label for="optional-draw">Optional Draw / Guarantee</label>
+            <div class="ip sm"><span class="affix" aria-hidden="true">$</span><input type="number" id="optional-draw" value="0" min="0" step="250"/></div>
+          </div>
+          <div class="crow sub">
+            <span>Contractor Cost Subtotal</span>
+            <span class="camt gold" id="c99-people-sub">$4,000<em>/mo</em></span>
+          </div>
+        </div>
+
+        <!-- Infrastructure Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-server" aria-hidden="true"></i> Infrastructure Required</div>
+          <div class="crow infra"><span>CRM (GHL)</span><span class="camt">$297<em>/mo</em></span></div>
+          <div class="crow infra"><span>Email Infrastructure</span><span class="camt">$997<em>/mo</em></span></div>
+          <div class="crow infra"><span>Data + Enrichment</span><span class="camt">$350<em>/mo</em></span></div>
+          <div class="crow infra"><span>LinkedIn Sales Nav</span><span class="camt">$99<em>/mo</em></span></div>
+          <div class="crow infra"><span>Dialer + Calling</span><span class="camt">$50<em>/mo</em></span></div>
+          <div class="crow infra"><span>Automation / AI</span><span class="camt">$100<em>/mo</em></span></div>
+          <div class="crow sub"><span>Infra Subtotal</span><span class="camt gold">$1,893<em>/mo</em></span></div>
+          <div class="cb__hd" style="margin-top:1.2rem"><i class="fas fa-bolt" aria-hidden="true"></i> MetaGrowth System Layer</div>
+          <div class="crow infra"><span>Growth OS <span class="itag">Included w/ MetaGrowth</span></span><span class="camt">$225<em>/mo/user</em></span></div>
+        </div>
+
+        <!-- Visibility Card -->
+        <div class="cb">
+          <div class="cb__hd"><i class="fas fa-eye" aria-hidden="true"></i> Visibility Layer <em class="opt">Optional</em></div>
+          <div class="crow" id="c99-vis-row">
+            <span>AI Visibility (LLM SEO) <span class="tip" data-tip="Ensures your brand appears in AI-generated answers. $1,000/mo."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span>
+            <div class="tog-cost">
+              <label class="tog" aria-label="Toggle AI Visibility for 1099"><input type="checkbox" id="c1099-visibility" checked/><span class="tog__t"></span></label>
+              <span class="camt" id="c99-vis-amt">$1,000<em>/mo</em></span>
+            </div>
+          </div>
+          <div class="crow sub">
+            <span>Visibility Subtotal</span>
+            <span class="camt gold" id="c99-vis-sub">$1,000<em>/mo</em></span>
+          </div>
+          <div class="cb__hd" style="margin-top:1.2rem"><i class="fas fa-sitemap" aria-hidden="true"></i> Management Reality</div>
+          <p class="cnote">Still requires oversight — we reduce this in our model.</p>
+          <div class="mglist">
+            <div><i class="fas fa-check" aria-hidden="true"></i> Lead management</div>
+            <div><i class="fas fa-check" aria-hidden="true"></i> Messaging optimization</div>
+            <div><i class="fas fa-check" aria-hidden="true"></i> Performance oversight</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1099 Total Bar -->
+      <div class="tbar" aria-live="polite">
+        <div class="tbar__lbl"><i class="fas fa-calculator" aria-hidden="true"></i> True Monthly Cost (1099)</div>
+        <div class="tbar__val" id="c1099-total">$7,118<span class="tbar__mo">/mo</span></div>
+      </div>
+      <div class="step-nav" style="margin-top:1.5rem">
+        <button class="btn btn--gold" onclick="smoothScroll('your-numbers')">See My Results <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div><!-- /#view-1099 -->
+  </div>
+</section>
+
+<!-- ADVANCED MODE TOGGLES -->
+<section id="advanced-modes" class="section section--black" style="padding:2.5rem 0">
+  <div class="container">
+    <div class="adv-toggle-bar">
+      <div class="adv-tog-item">
+        <label class="big-tog" for="toggle-reality" aria-label="Toggle Advanced Reality Mode">
+          <input type="checkbox" id="toggle-reality"/>
+          <div class="big-tog__track"><div class="big-tog__thumb"></div></div>
+        </label>
+        <div class="adv-tog-item__text">
+          <span class="adv-tog-item__label">Show Real-World Factors <span class="adv-badge adv-badge--reality">Advanced</span></span>
+          <span class="adv-tog-item__sub">Layer in lead waste, no-shows, speed-to-lead, and underperformance — factors most plans ignore.</span>
+        </div>
+      </div>
+      <div class="adv-tog-item">
+        <label class="big-tog big-tog--risk" for="toggle-risk" aria-label="Toggle Full Cost and Risk Mode">
+          <input type="checkbox" id="toggle-risk"/>
+          <div class="big-tog__track"><div class="big-tog__thumb"></div></div>
+        </label>
+        <div class="adv-tog-item__text">
+          <span class="adv-tog-item__label">Show Full Cost + Risk Exposure <span class="adv-badge adv-badge--risk">Risk Layer</span></span>
+          <span class="adv-tog-item__sub">Add bad hire probability, founder time cost, and opportunity cost of delay to every model.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="adv-panel" id="panel-reality">
+      <div class="adv-grid">
+        <div class="adv-card">
+          <div class="adv-card__hd"><i class="fas fa-filter-circle-xmark"></i> Lead Waste Factor</div>
+          <div class="adv-sl-wrap">
+            <div class="adv-sl-top"><label for="sl-lead-waste">% of leads that go cold / unworked</label><span class="adv-val-badge" id="val-lead-waste">25%</span></div>
+            <input type="range" id="sl-lead-waste" min="10" max="50" value="25" step="5"/>
+            <div class="adv-sl-ends"><span>10% (tight)</span><span>50% (typical)</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.65rem;line-height:1.5">Reduces effective revenue for W2 and 1099 models.</p>
+        </div>
+        <div class="adv-card">
+          <div class="adv-card__hd"><i class="fas fa-calendar-xmark"></i> No-Show Rate</div>
+          <div class="adv-sl-wrap">
+            <div class="adv-sl-top"><label for="sl-noshow">% of booked meetings that don't attend</label><span class="adv-val-badge" id="val-noshow">25%</span></div>
+            <input type="range" id="sl-noshow" min="0" max="40" value="25" step="5"/>
+            <div class="adv-sl-ends"><span>0%</span><span>40%</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.65rem;line-height:1.5">Directly reduces completed meetings and effective revenue output.</p>
+        </div>
+        <div class="adv-card">
+          <div class="adv-card__hd"><i class="fas fa-bolt-lightning"></i> Speed-to-Lead Response</div>
+          <div class="stl-opts" role="radiogroup" aria-label="Speed to lead response time">
+            <label class="stl-opt"><input type="radio" name="stl" id="stl-instant" value="1.0" checked/><span class="stl-opt__label">Instant <em>1.0× conversion</em></span></label>
+            <label class="stl-opt"><input type="radio" name="stl" id="stl-1hr" value="0.7"/><span class="stl-opt__label">Under 1 hour <em>0.7× conversion</em></span></label>
+            <label class="stl-opt"><input type="radio" name="stl" id="stl-24hr" value="0.3"/><span class="stl-opt__label">24+ hours <em>0.3× conversion</em></span></label>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.75rem;line-height:1.5">Slower follow-up reduces conversion rates.</p>
+        </div>
+        <div class="adv-card">
+          <div class="adv-card__hd"><i class="fas fa-chart-line"></i> Underperformance Factor</div>
+          <div class="adv-sl-wrap">
+            <div class="adv-sl-top"><label for="sl-underperf">% of expected quota actually delivered</label><span class="adv-val-badge" id="val-underperf">70%</span></div>
+            <input type="range" id="sl-underperf" min="50" max="100" value="70" step="5"/>
+            <div class="adv-sl-ends"><span>50% (struggling)</span><span>100% (full quota)</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.65rem;line-height:1.5">Applies to W2 and 1099 only.</p>
+        </div>
+        <div class="adv-card">
+          <div class="adv-card__hd"><i class="fas fa-hourglass-half"></i> Ramp Delay Impact (W2)</div>
+          <p style="font-size:.74rem;color:var(--g300);margin-bottom:.65rem;line-height:1.5">Revenue is delayed during the ramp period. Based on your ramp selection in Step 3.</p>
+          <div class="adv-row">
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--g500);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.04)"><span>Ramp period selected</span><span style="color:var(--gold);font-weight:700" id="adv-ramp-display">5 months</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--g500);padding:.35rem 0"><span>Revenue deferred</span><span style="color:#FC8181;font-weight:700" id="adv-ramp-rev-lost">$100,000</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.5rem;line-height:1.5">Full salary paid — zero or reduced revenue during this window.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="adv-panel" id="panel-risk">
+      <div class="adv-grid">
+        <div class="adv-card adv-card--risk">
+          <div class="adv-card__hd"><i class="fas fa-user-xmark"></i> Bad Hire Risk (W2)</div>
+          <div class="adv-sl-wrap">
+            <div class="adv-sl-top"><label for="sl-badhire">Probability of a bad hire</label><span class="adv-val-badge adv-val-badge--risk" id="val-badhire">40%</span></div>
+            <input type="range" id="sl-badhire" min="30" max="50" value="40" step="5"/>
+            <div class="adv-sl-ends"><span>30%</span><span>50%</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.65rem;line-height:1.5">Industry average is 40–50%. A bad hire costs 3–6 months of salary + replacement costs.</p>
+        </div>
+        <div class="adv-card adv-card--risk">
+          <div class="adv-card__hd"><i class="fas fa-clock"></i> Founder / Management Time</div>
+          <div class="adv-row">
+            <label for="founder-hrs">Hours per week spent managing sales</label>
+            <div class="adv-inline"><input type="number" id="founder-hrs" value="10" min="1" max="40" step="1"/><span>hrs/week</span></div>
+          </div>
+          <div class="adv-row">
+            <label for="founder-rate">Your hourly value</label>
+            <div class="adv-inline"><span style="color:var(--g500);font-size:.8rem">$</span><input type="number" id="founder-rate" value="200" min="50" max="1000" step="25"/><span>/hr</span></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.35rem;line-height:1.5">Applies fully to W2 and 1099. MetaGrowth reduces this to near zero.</p>
+        </div>
+        <div class="adv-card adv-card--risk">
+          <div class="adv-card__hd"><i class="fas fa-hourglass-end"></i> Opportunity Cost of Delay</div>
+          <p style="font-size:.74rem;color:var(--g300);margin-bottom:.75rem;line-height:1.5">Revenue not captured while a W2 rep is ramping.</p>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:700;padding:.4rem 0">
+              <span style="color:var(--g300)">Revenue not captured during ramp:</span>
+              <span style="color:#FC8181" id="adv-opp-cost">$100,000</span>
+            </div>
+          </div>
+          <p style="font-size:.68rem;color:var(--g700);margin-top:.5rem;line-height:1.5">MetaGrowth starts generating pipeline in week one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YOUR NUMBERS -->
+<section id="your-numbers" class="section section--dark" aria-labelledby="output-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">YOUR RESULTS</div>
+    <h2 class="section-headline" id="output-headline">Your <span class="gold">Monthly Snapshot</span></h2>
+    <p class="section-sub">Based on everything you've entered — here's your full financial picture across all three models.</p>
+    <div class="mode-banner mode-banner--reality" id="banner-reality"><i class="fas fa-flask"></i><span><strong>Real-World Mode ON</strong> — Numbers reflect lead waste, no-shows, speed-to-lead &amp; underperformance adjustments.</span></div>
+    <div class="mode-banner mode-banner--risk" id="banner-risk"><i class="fas fa-shield-halved"></i><span><strong>Risk Layer ON</strong> — Costs include bad hire probability, founder time &amp; opportunity cost of delay.</span></div>
+
+    <div class="out-tabs" role="tablist" aria-label="Model output tabs">
+      <button class="otab otab--on" id="tab-w2" role="tab" aria-selected="true" aria-controls="panel-w2" onclick="switchTab('w2')"><i class="fas fa-id-badge" aria-hidden="true"></i> W2 Model</button>
+      <button class="otab" id="tab-1099" role="tab" aria-selected="false" aria-controls="panel-1099" onclick="switchTab('1099')"><i class="fas fa-file-contract" aria-hidden="true"></i> 1099 Model</button>
+      <button class="otab" id="tab-mg" role="tab" aria-selected="false" aria-controls="panel-mg" onclick="switchTab('mg')"><i class="fas fa-bolt" aria-hidden="true"></i> MetaGrowth</button>
+    </div>
+
+    <div class="opanel" id="panel-w2" role="tabpanel" aria-labelledby="tab-w2">
+      <div class="metrics">
+        <div class="met"><div class="met__ic"><i class="fas fa-dollar-sign" aria-hidden="true"></i></div><div class="met__lbl">Monthly Revenue</div><div class="met__val" id="r-w2-rev">$20,000</div></div>
+        <div class="met met--warn"><div class="met__ic"><i class="fas fa-arrow-trend-down" aria-hidden="true"></i></div><div class="met__lbl">Total Monthly Cost</div><div class="met__val" id="r-w2-cost">$15,570</div></div>
+        <div class="met" id="card-w2-profit"><div class="met__ic"><i class="fas fa-chart-pie" aria-hidden="true"></i></div><div class="met__lbl">Net Monthly Profit</div><div class="met__val" id="r-w2-profit">$4,430</div></div>
+        <div class="met"><div class="met__ic"><i class="fas fa-percent" aria-hidden="true"></i></div><div class="met__lbl">Profit Margin</div><div class="met__val" id="r-w2-margin">22.2%</div></div>
+      </div>
+      <div class="effs">
+        <div class="eff"><div class="eff__lbl">Cost Per Deal</div><div class="eff__val" id="r-w2-cpd">$3,892</div></div>
+        <div class="eff"><div class="eff__lbl">Break-Even Deals</div><div class="eff__val" id="r-w2-be">3.1</div></div>
+        <div class="eff"><div class="eff__lbl">ROI Multiple</div><div class="eff__val" id="r-w2-roi">1.3×</div></div>
+        <div class="eff"><div class="eff__lbl">Ramp Cost Exposure</div><div class="eff__val" id="r-w2-ramp">$71,598</div></div>
+      </div>
+      <div class="becall"><i class="fas fa-calculator" aria-hidden="true"></i><span><strong>Break-Even Formula:</strong> Total Monthly Cost ÷ Average Deal Size = <span id="r-w2-be-formula">$15,570 ÷ $5,000 = 3.1 deals needed</span></span></div>
+      <div class="adj-block" id="adj-reality-w2"><div class="adj-hd"><i class="fas fa-flask"></i> Real-World Adjusted Figures</div><div class="adj-rows"><div class="adj-row"><span>Lead Waste Reduction</span><span class="adj-num adj-num--neg" id="ar-w2-leadwaste">−$0</span></div><div class="adj-row"><span>No-Show Impact</span><span class="adj-num adj-num--neg" id="ar-w2-noshow">−$0</span></div><div class="adj-row"><span>Speed-to-Lead Multiplier</span><span class="adj-num adj-num--warn" id="ar-w2-stl">1.0×</span></div><div class="adj-row"><span>Underperformance Factor</span><span class="adj-num adj-num--warn" id="ar-w2-underperf">70%</span></div><div class="adj-row adj-row--total"><strong>Adjusted Monthly Revenue</strong><span class="adj-num" id="ar-w2-rev">$20,000</span></div><div class="adj-row"><strong>Adjusted Net Profit</strong><span class="adj-num" id="ar-w2-profit">$4,430</span></div><div class="adj-row"><span>Lost Revenue from Inefficiencies</span><span class="adj-num adj-num--neg" id="ar-w2-lost">$0</span></div></div></div>
+      <div class="adj-block adj-block--risk" id="adj-risk-w2"><div class="adj-hd adj-hd--risk"><i class="fas fa-shield-halved"></i> Risk-Adjusted Cost Exposure</div><div class="adj-rows"><div class="adj-row"><span>Expected Bad Hire Loss</span><span class="adj-num adj-num--neg" id="ar-w2-badhire">$0</span></div><div class="adj-row"><span>Founder Time Cost / month</span><span class="adj-num adj-num--neg" id="ar-w2-founder">$0</span></div><div class="adj-row"><span>Revenue Not Captured During Ramp</span><span class="adj-num adj-num--neg" id="ar-w2-oppcost">$0</span></div><div class="adj-row adj-row--total"><strong>Risk-Adjusted Total Cost</strong><span class="adj-num adj-num--neg" id="ar-w2-totalcost">$15,570</span></div></div></div>
+    </div>
+
+    <div class="opanel" id="panel-1099" role="tabpanel" aria-labelledby="tab-1099" style="display:none">
+      <div class="metrics">
+        <div class="met"><div class="met__ic"><i class="fas fa-dollar-sign" aria-hidden="true"></i></div><div class="met__lbl">Monthly Revenue</div><div class="met__val" id="r-1099-rev">$20,000</div></div>
+        <div class="met met--warn"><div class="met__ic"><i class="fas fa-arrow-trend-down" aria-hidden="true"></i></div><div class="met__lbl">Total Monthly Cost</div><div class="met__val" id="r-1099-cost">$7,118</div></div>
+        <div class="met" id="card-1099-profit"><div class="met__ic"><i class="fas fa-chart-pie" aria-hidden="true"></i></div><div class="met__lbl">Net Monthly Profit</div><div class="met__val" id="r-1099-profit">$12,882</div></div>
+        <div class="met"><div class="met__ic"><i class="fas fa-percent" aria-hidden="true"></i></div><div class="met__lbl">Profit Margin</div><div class="met__val" id="r-1099-margin">64.4%</div></div>
+      </div>
+      <div class="effs">
+        <div class="eff"><div class="eff__lbl">Cost Per Deal</div><div class="eff__val" id="r-1099-cpd">$1,780</div></div>
+        <div class="eff"><div class="eff__lbl">Break-Even Deals</div><div class="eff__val" id="r-1099-be">1.4</div></div>
+        <div class="eff"><div class="eff__lbl">ROI Multiple</div><div class="eff__val" id="r-1099-roi">2.8×</div></div>
+        <div class="eff"><div class="eff__lbl">Ramp Time</div><div class="eff__val" style="font-size:.9rem">1–3 mo</div></div>
+      </div>
+      <div class="becall"><i class="fas fa-calculator" aria-hidden="true"></i><span><strong>Break-Even Formula:</strong> Total Monthly Cost ÷ Average Deal Size = <span id="r-1099-be-formula">$7,118 ÷ $5,000 = 1.4 deals needed</span></span></div>
+      <div class="adj-block" id="adj-reality-1099"><div class="adj-hd"><i class="fas fa-flask"></i> Real-World Adjusted Figures</div><div class="adj-rows"><div class="adj-row"><span>Lead Waste Reduction</span><span class="adj-num adj-num--neg" id="ar-1099-leadwaste">−$0</span></div><div class="adj-row"><span>No-Show Impact</span><span class="adj-num adj-num--neg" id="ar-1099-noshow">−$0</span></div><div class="adj-row"><span>Speed-to-Lead Multiplier</span><span class="adj-num adj-num--warn" id="ar-1099-stl">1.0×</span></div><div class="adj-row"><span>Underperformance Factor</span><span class="adj-num adj-num--warn" id="ar-1099-underperf">70%</span></div><div class="adj-row adj-row--total"><strong>Adjusted Monthly Revenue</strong><span class="adj-num" id="ar-1099-rev">$20,000</span></div><div class="adj-row"><strong>Adjusted Net Profit</strong><span class="adj-num" id="ar-1099-profit">$12,882</span></div><div class="adj-row"><span>Lost Revenue from Inefficiencies</span><span class="adj-num adj-num--neg" id="ar-1099-lost">$0</span></div></div></div>
+      <div class="adj-block adj-block--risk" id="adj-risk-1099"><div class="adj-hd adj-hd--risk"><i class="fas fa-shield-halved"></i> Risk-Adjusted Cost Exposure</div><div class="adj-rows"><div class="adj-row"><span>Founder Time Cost / month</span><span class="adj-num adj-num--neg" id="ar-1099-founder">$0</span></div><div class="adj-row adj-row--total"><strong>Risk-Adjusted Total Cost</strong><span class="adj-num adj-num--neg" id="ar-1099-totalcost">$7,118</span></div></div></div>
+    </div>
+
+    <div class="opanel" id="panel-mg" role="tabpanel" aria-labelledby="tab-mg" style="display:none">
+      <div class="metrics">
+        <div class="met"><div class="met__ic"><i class="fas fa-dollar-sign" aria-hidden="true"></i></div><div class="met__lbl">Monthly Revenue</div><div class="met__val" id="r-mg-rev">$20,000</div></div>
+        <div class="met met--good"><div class="met__ic"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i></div><div class="met__lbl">Total Monthly Cost</div><div class="met__val" id="r-mg-cost">$3,750</div></div>
+        <div class="met" id="card-mg-profit"><div class="met__ic"><i class="fas fa-chart-pie" aria-hidden="true"></i></div><div class="met__lbl">Net Monthly Profit</div><div class="met__val" id="r-mg-profit">$16,250</div></div>
+        <div class="met"><div class="met__ic"><i class="fas fa-percent" aria-hidden="true"></i></div><div class="met__lbl">Profit Margin</div><div class="met__val" id="r-mg-margin">81.3%</div></div>
+      </div>
+      <div class="effs">
+        <div class="eff"><div class="eff__lbl">Cost Per Deal</div><div class="eff__val" id="r-mg-cpd">$938</div></div>
+        <div class="eff"><div class="eff__lbl">Break-Even Deals</div><div class="eff__val" id="r-mg-be">0.8</div></div>
+        <div class="eff"><div class="eff__lbl">ROI Multiple</div><div class="eff__val" id="r-mg-roi">5.3×</div></div>
+        <div class="eff eff--good"><div class="eff__lbl">Time to Revenue</div><div class="eff__val">Immediate</div></div>
+      </div>
+      <div class="vis-row" id="mg-vis-row" style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .2rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.5rem">
+        <span style="font-size:.82rem;color:var(--g300)">AI Visibility (LLM SEO) <span class="tip" data-tip="Ensures your brand appears in AI-generated answers. $1,000/mo."><i class="fas fa-circle-info" aria-hidden="true"></i></span></span>
+        <div class="tog-cost">
+          <label class="tog" aria-label="Toggle AI Visibility for MetaGrowth"><input type="checkbox" id="mg-visibility"/><span class="tog__t"></span></label>
+          <span class="camt" id="mg-vis-amt" style="margin-left:.5rem"><s style="opacity:.4">$1,000</s><em>/mo</em></span>
+        </div>
+      </div>
+      <div class="becall becall--good"><i class="fas fa-rocket" aria-hidden="true"></i><span><strong>MetaGrowth Advantage:</strong> Break even in <span id="r-mg-be-formula">under 1 deal</span>. No ramp. No build. No hiring risk.</span></div>
+      <div class="adj-block" id="adj-reality-mg"><div class="adj-hd"><i class="fas fa-flask"></i> Real-World Adjusted Figures</div><div class="adj-rows"><div class="adj-row"><span>Lead Waste (system-managed)</span><span class="adj-num adj-num--good" id="ar-mg-leadwaste">Minimal</span></div><div class="adj-row"><span>No-Show Impact</span><span class="adj-num adj-num--neg" id="ar-mg-noshow">−$0</span></div><div class="adj-row"><span>Speed-to-Lead (automated)</span><span class="adj-num adj-num--good">Instant</span></div><div class="adj-row"><span>Performance Consistency</span><span class="adj-num adj-num--good">Pod-Managed</span></div><div class="adj-row adj-row--total"><strong>Adjusted Monthly Revenue</strong><span class="adj-num" id="ar-mg-rev">$20,000</span></div><div class="adj-row"><strong>Adjusted Net Profit</strong><span class="adj-num adj-num--good" id="ar-mg-profit">$16,250</span></div><div class="adj-row"><span>Lost Revenue from Inefficiencies</span><span class="adj-num adj-num--good" id="ar-mg-lost">~$0</span></div></div></div>
+      <div class="adj-block adj-block--risk" id="adj-risk-mg"><div class="adj-hd adj-hd--risk"><i class="fas fa-shield-halved"></i> Risk-Adjusted Cost Exposure</div><div class="adj-rows"><div class="adj-row"><span>Bad Hire Risk</span><span class="adj-num adj-num--good">None — no hiring</span></div><div class="adj-row"><span>Founder Time Cost / month</span><span class="adj-num adj-num--good" id="ar-mg-founder">~$0</span></div><div class="adj-row"><span>Opportunity Cost of Delay</span><span class="adj-num adj-num--good">$0 — starts week one</span></div><div class="adj-row adj-row--total"><strong>Risk-Adjusted Total Cost</strong><span class="adj-num adj-num--good" id="ar-mg-totalcost">$3,750</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STRESS TEST -->
+<section id="reality-check" class="section section--black" aria-labelledby="stress-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">STRESS TEST</div>
+    <h2 class="section-headline" id="stress-headline">What Happens If Things Don't <span class="gold">Go Perfectly?</span></h2>
+    <p class="section-sub">Adjust these assumptions and watch your margins shift in real time.</p>
+    <div class="two-col">
+      <div class="card">
+        <div class="card__hd"><i class="fas fa-sliders card__icon gold" aria-hidden="true"></i> Adjust Assumptions</div>
+        <div class="sgrp">
+          <div class="stop"><label for="sl-cr">Close Rate Adjustment</label><span class="sbadge" id="sv-cr">+0%</span></div>
+          <input type="range" id="sl-cr" min="-80" max="0" value="0" step="5"/>
+          <div class="sends"><span>−80%</span><span>No change</span></div>
+        </div>
+        <div class="sgrp">
+          <div class="stop"><label for="sl-dm">Deals Per Month Adjustment</label><span class="sbadge" id="sv-dm">+0 deals</span></div>
+          <input type="range" id="sl-dm" min="-10" max="0" value="0" step="1"/>
+          <div class="sends"><span>−10 deals</span><span>No change</span></div>
+        </div>
+        <div class="sgrp">
+          <div class="stop"><label for="sl-ds">Deal Size Adjustment</label><span class="sbadge" id="sv-ds">−$0</span></div>
+          <input type="range" id="sl-ds" min="-5000" max="0" value="0" step="250"/>
+          <div class="sends"><span>−$5,000</span><span>No change</span></div>
+        </div>
+        <button class="btn btn--outline btn--sm" onclick="resetStress()"><i class="fas fa-rotate-left" aria-hidden="true"></i> Reset Sliders</button>
+      </div>
+      <div class="card card--dark stress-r" aria-live="polite">
+        <div class="card__hd"><i class="fas fa-chart-line card__icon gold" aria-hidden="true"></i> Adjusted Net Profit (Live)</div>
+        <div class="si"><div class="srow"><span><i class="fas fa-id-badge" aria-hidden="true"></i> W2 Net Profit</span><span class="sval" id="sv-w2">$4,430</span></div><div class="strack"><div class="sfill" id="sf-w2" style="width:30%"></div></div></div>
+        <div class="si"><div class="srow"><span><i class="fas fa-file-contract" aria-hidden="true"></i> 1099 Net Profit</span><span class="sval" id="sv-1099">$12,882</span></div><div class="strack"><div class="sfill sfill--med" id="sf-1099" style="width:60%"></div></div></div>
+        <div class="si"><div class="srow"><span><i class="fas fa-bolt" aria-hidden="true"></i> MetaGrowth Profit</span><span class="sval" id="sv-mg">$16,250</span></div><div class="strack"><div class="sfill sfill--best" id="sf-mg" style="width:80%"></div></div></div>
+        <div class="srev">Adjusted Monthly Revenue: <strong id="sv-rev">$20,000</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section id="comparison" class="section section--dark" aria-labelledby="cmp-headline">
+  <div class="container">
+    <div class="section-label" aria-hidden="true">SIDE BY SIDE</div>
+    <h2 class="section-headline" id="cmp-headline">Three Ways to <span class="gold">Build This</span></h2>
+    <p class="section-sub">Every option carries a different cost, risk profile, and time to first revenue.</p>
+    <div class="tw">
+      <table class="ctbl" aria-label="Model comparison">
+        <thead><tr><th>Model</th><th>Monthly Cost</th><th>Ramp Time</th><th>Risk</th><th>Management</th><th>Time to Revenue</th></tr></thead>
+        <tbody>
+          <tr><td><span class="bdg bdg--w2"><i class="fas fa-id-badge" aria-hidden="true"></i> W2</span></td><td id="cmp-w2-cost"><span class="cbdg cbdg--hi">$15,570/mo</span></td><td><span class="pill pill--neu">3–6 months</span></td><td><span class="pill pill--bad">High</span></td><td><span class="pill pill--bad">High</span></td><td><span class="pill pill--neu">3–6 months</span></td></tr>
+          <tr><td><span class="bdg bdg--1099"><i class="fas fa-file-contract" aria-hidden="true"></i> 1099</span></td><td id="cmp-1099-cost"><span class="cbdg cbdg--med">$7,118/mo</span></td><td><span class="pill pill--mid">1–3 months</span></td><td><span class="pill pill--mid">Medium</span></td><td><span class="pill pill--mid">Medium</span></td><td><span class="pill pill--mid">1–3 months</span></td></tr>
+          <tr class="tr--gold"><td><span class="bdg bdg--mg"><i class="fas fa-bolt" aria-hidden="true"></i> MetaGrowth</span></td><td id="cmp-mg-cost"><span class="cbdg cbdg--lo">$3,750/mo</span></td><td><span class="pill pill--good">Immediate</span></td><td><span class="pill pill--good">Low</span></td><td><span class="pill pill--good">Minimal</span></td><td><span class="pill pill--good">Immediate</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="risk-grid">
+      <div class="rcard"><div class="rcard__hd"><i class="fas fa-calculator" aria-hidden="true"></i> Break-Even Deals Needed</div><div class="rrows"><div class="rrow"><span>W2</span><span class="rval rval--bad" id="rk-w2-be">3.1 deals</span></div><div class="rrow"><span>1099</span><span class="rval" id="rk-1099-be">1.4 deals</span></div><div class="rrow"><span class="gold">MetaGrowth</span><span class="rval rval--good" id="rk-mg-be">&lt; 1 deal — immediate ROI</span></div></div></div>
+      <div class="rcard"><div class="rcard__hd"><i class="fas fa-fire-flame-curved" aria-hidden="true"></i> Total Cash at Risk (6 months)</div><div class="rrows"><div class="rrow"><span>W2</span><span class="rval rval--bad" id="rk-w2-cash">$93,418</span></div><div class="rrow"><span>1099</span><span class="rval" id="rk-1099-cash">$42,708</span></div><div class="rrow"><span class="gold">MetaGrowth</span><span class="rval rval--good" id="rk-mg-cash">$22,500</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta-final" class="section section--black cta-sec" aria-labelledby="cta-headline">
+  <div class="container cta-inner">
+    <div class="eyebrow" style="margin-bottom:1.5rem"><i class="fas fa-lightbulb" aria-hidden="true" style="margin-right:.4rem"></i>THE TAKEAWAY</div>
+    <h2 class="cta-h" id="cta-headline">Most Companies Don't Need<br>Another Salesperson</h2>
+    <h2 class="cta-h cta-h--gold">They Need a System</h2>
+    <p class="cta-sub">You've seen the numbers. The cost gap is real — and it only grows over time.</p>
+    <div class="snap-row" aria-live="polite" aria-label="Your financial snapshot">
+      <div class="snap"><div class="snap__lbl">Your Monthly Revenue</div><div class="snap__val" id="snap-rev">$20,000/mo</div></div>
+      <div class="snap-div" aria-hidden="true"></div>
+      <div class="snap"><div class="snap__lbl">W2 True Cost</div><div class="snap__val snap__val--dim" id="snap-w2">$15,570/mo</div></div>
+      <div class="snap-div" aria-hidden="true"></div>
+      <div class="snap"><div class="snap__lbl">MetaGrowth Investment</div><div class="snap__val snap__val--gold" id="snap-mg">$3,750/mo</div></div>
+    </div>
+    <button onclick="openBooking()" class="btn btn--gold btn--xl"><i class="fas fa-calendar-check" aria-hidden="true"></i> Book a Strategy Call</button>
+    <p class="cta-dis">No pitch. No pressure. Just clarity on your numbers.</p>
+    <div class="export-wrap">
+      <button class="btn btn--outline" onclick="toggleExport()"><i class="fas fa-file-arrow-down" aria-hidden="true"></i> Send Me My ROI Breakdown</button>
+      <div class="export-form" id="export-form">
+        <div class="export-field"><label for="export-name">Full Name</label><input type="text" id="export-name" placeholder="Jane Smith" autocomplete="name"/></div>
+        <div class="export-field"><label for="export-email">Email Address</label><input type="email" id="export-email" placeholder="jane@company.com" autocomplete="email"/></div>
+        <div class="export-field"><label for="export-phone">Phone Number</label><input type="tel" id="export-phone" placeholder="+1 (555) 000-0000" autocomplete="tel"/></div>
+        <button class="btn btn--gold export-submit" id="export-submit-btn" onclick="submitExport()"><i class="fas fa-paper-plane" aria-hidden="true"></i> Send My ROI Breakdown</button>
+      </div>
+      <div class="export-ok" id="export-ok"><i class="fas fa-circle-check" aria-hidden="true"></i> Got it! Your ROI breakdown is on the way.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer__in">
+    <a href="https://www.metagrowth.ventures" target="_blank" rel="noopener" class="nav__logo" aria-label="MetaGrowth Ventures homepage">
+      <span class="logo-crop logo-crop--sm"><img src="logo.png" alt="MetaGrowth Ventures"/></span>
+    </a>
+    <p class="footer__copy">© 2025 MetaGrowth Ventures. All rights reserved. Calculator for illustrative purposes.</p>
+    <a href="https://www.metagrowth.ventures" target="_blank" rel="noopener" class="footer__lnk">metagrowth.ventures <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+const S = {
+  dealSize:5000, dealsPerMonth:4, closeRate:20, baseSalary:80000,
+  rampMonths:5, mgmtCost:3500, w2Vis:true, commRate:20, draw:0,
+  c1099Vis:true, mgVis:false, model:'w2', activeTab:'w2',
+  sCR:0, sDM:0, sDS:0
+};
+
+const INFRA=297+997+350+99+50+100, VIS=1000, BENEFITS=750,
+      TAX_RATE=0.0765, GROWTH_OS=225, MG_BASE=3750;
+
+const $  = id => document.getElementById(id);
+const st = (id,v) => { const e=$(id); if(e) e.textContent=v; };
+const sh = (id,v) => { const e=$(id); if(e) e.innerHTML=v; };
+
+/* stepInput — drives all +/- stepper buttons in Step 01 */
+function stepInput(id, delta, min, max){
+  const el=$(id); if(!el) return;
+  let v=parseFloat(el.value)||0;
+  v=Math.round((v+delta)*1000)/1000; // avoid float drift
+  if(min!==undefined) v=Math.max(min,v);
+  if(max!==undefined) v=Math.min(max,v);
+  el.value=v;
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+}
+
+function money(n){ if(!isFinite(n)) return '$0'; const a=Math.abs(Math.round(n)); return (n<0?'-$':'$')+a.toLocaleString('en-US'); }
+function monmo(n){ return money(n)+'/mo'; }
+function pct(n){ return !isFinite(n)?'0.0%':n.toFixed(1)+'%'; }
+function mx(n){ return (!isFinite(n)||n<=0)?'0.0×':n.toFixed(1)+'×'; }
+function dls(n){ return !isFinite(n)?'0.0':n.toFixed(1); }
+
+function w2Cost(){
+  const mo=S.baseSalary/12, tax=mo*TAX_RATE, ramp=(mo*0.45*S.rampMonths)/12, vis=S.w2Vis?VIS:0;
+  return mo+tax+BENEFITS+INFRA+vis+S.mgmtCost+ramp;
+}
+function w2CostBase(){
+  const mo=S.baseSalary/12, tax=mo*TAX_RATE, vis=S.w2Vis?VIS:0;
+  return mo+tax+BENEFITS+INFRA+vis+S.mgmtCost;
+}
+function rampExposure(){ return w2CostBase()*S.rampMonths; }
+function c1099Cost(rev){ return rev*(S.commRate/100)+S.draw+INFRA+GROWTH_OS+(S.c1099Vis?VIS:0); }
+function mgCost(){ return MG_BASE+(S.mgVis?VIS:0); }
+
+function readInputs(){
+  S.dealSize      = Math.max(0, parseFloat($('deal-size').value)||0);
+  S.dealsPerMonth = Math.max(0, parseFloat($('deals-per-month').value)||0);
+  S.closeRate     = Math.max(1, parseFloat($('close-rate').value)||20);
+  S.baseSalary    = Math.max(0, parseFloat($('base-salary').value)||80000);
+  S.rampMonths    = parseFloat($('ramp-months').value)||5;
+  S.mgmtCost      = parseFloat($('mgmt-cost').value)||3500;
+  S.commRate      = Math.max(1, parseFloat($('commission-rate').value)||20);
+  S.draw          = Math.max(0, parseFloat($('optional-draw').value)||0);
+  S.w2Vis         = $('w2-visibility').checked;
+  S.c1099Vis      = $('c1099-visibility').checked;
+  const mgVisEl=$('mg-visibility'); S.mgVis = mgVisEl?mgVisEl.checked:false;
+}
+
+function recalc(){
+  readInputs();
+
+  const rev=S.dealSize*S.dealsPerMonth, annual=rev*12;
+  const leads=S.closeRate>0?Math.ceil(S.dealsPerMonth/(S.closeRate/100)):0;
+  const wc=w2Cost(), cc=c1099Cost(rev), mc=mgCost();
+  const ramp=rampExposure(), mo=S.baseSalary/12, commEst=rev*(S.commRate/100);
+
+  /* Step 01 */
+  st('monthly-revenue',money(rev)); st('annual-revenue',money(annual));
+  st('leads-needed',leads.toLocaleString()); st('cr-inline',S.closeRate+'%');
+  st('leads-inline',leads+' leads'); st('deals-inline',S.dealsPerMonth+' deals');
+  /* Mini revenue breakdown */
+  st('bd-deal-size',money(S.dealSize)); st('bd-deals-mo',S.dealsPerMonth); st('bd-rev-total',money(rev));
+
+  /* Step 03 — W2 rows */
+  const moTax=mo*TAX_RATE;
+  const rampMo=(mo*0.45*S.rampMonths)/12;
+  const w2PeopleSub=mo+moTax+BENEFITS;
+  const w2VisMgmtSub=(S.w2Vis?VIS:0)+S.mgmtCost;
+
+  st('salary-mo','= '+money(mo)+'/mo');
+  sh('payroll-tax',money(moTax)+'<em>/mo</em>');
+  sh('w2-people-sub',money(w2PeopleSub)+'<em>/mo</em>');
+  sh('w2-ramp-mo',money(rampMo)+'<em>/mo</em>');
+  sh('w2-vismgmt-sub',money(w2VisMgmtSub)+'<em>/mo</em>');
+  sh('w2-total',money(wc)+'<span class="tbar__mo">/mo</span>');
+
+  /* W2 visibility dim */
+  const w2vr=$('w2-vis-row');
+  if(w2vr) w2vr.classList.toggle('vis-row--off',!S.w2Vis);
+  sh('w2-vis-amt',S.w2Vis?'$1,000<em>/mo</em>':'<s style="opacity:.4">$1,000</s><em>/mo</em>');
+
+  /* Step 03 — 1099 rows */
+  sh('commission-est',money(commEst)+'<em>/mo</em>');
+  sh('c99-people-sub',money(commEst+S.draw)+'<em>/mo</em>');
+  sh('c99-vis-sub',money(S.c1099Vis?VIS:0)+'<em>/mo</em>');
+  sh('c1099-total',money(cc)+'<span class="tbar__mo">/mo</span>');
+
+  /* 1099 visibility dim */
+  const c99vr=$('c99-vis-row');
+  if(c99vr) c99vr.classList.toggle('vis-row--off',!S.c1099Vis);
+  sh('c99-vis-amt',S.c1099Vis?'$1,000<em>/mo</em>':'<s style="opacity:.4">$1,000</s><em>/mo</em>');
+
+  /* MG visibility dim */
+  const mgvr=$('mg-vis-row');
+  if(mgvr) mgvr.classList.toggle('vis-row--off',!S.mgVis);
+  sh('mg-vis-amt',S.mgVis?'$1,000<em>/mo</em>':'<s style="opacity:.4">$1,000</s><em>/mo</em>');
+
+  /* Ramp exposure */
+  st('r-w2-ramp',money(ramp));
+
+  /* Ramp delay display — always updated, visible even when advanced panel is collapsed */
+  st('adv-ramp-display',S.rampMonths+' months');
+  st('adv-ramp-rev-lost',money(rev*S.rampMonths));
+  st('adv-opp-cost',money(rev*S.rampMonths));
+
+  calcAdvanced(rev,wc,cc,mc);
+
+  /* Comparison table */
+  sh('cmp-w2-cost',`<span class="cbdg cbdg--hi">${monmo(wc)}</span>`);
+  sh('cmp-1099-cost',`<span class="cbdg cbdg--med">${monmo(cc)}</span>`);
+  sh('cmp-mg-cost',`<span class="cbdg cbdg--lo">${monmo(mc)}</span>`);
+
+  /* Break-even = how many deals are needed to cover one month of cost */
+  const wBE=S.dealSize>0?wc/S.dealSize:0;
+  const cBE=S.dealSize>0?cc/S.dealSize:0;
+  const mBE=S.dealSize>0?mc/S.dealSize:0;
+  st('rk-w2-be',dls(wBE)+' deals'); st('rk-1099-be',dls(cBE)+' deals');
+  st('rk-mg-be',mBE<=1?'< 1 deal — immediate ROI':dls(mBE)+' deals');
+  st('rk-w2-cash',money(wc*6)); st('rk-1099-cash',money(cc*6)); st('rk-mg-cash',money(mc*6));
+
+  syncStress(rev,wc,cc,mc);
+}
+
+function colorProfit(valId,profit){
+  const el=$(valId); if(!el) return;
+  el.classList.toggle('met__val--neg',profit<0);
+  const cardMap={'r-w2-profit':'card-w2-profit','r-1099-profit':'card-1099-profit','r-mg-profit':'card-mg-profit'};
+  const card=$(cardMap[valId]);
+  if(card){ card.classList.toggle('met--warn',profit<0); card.classList.toggle('met--good',profit>=0); }
+}
+
+function setModel(type){
+  S.model=type; const isW2=type==='w2';
+  $('btn-w2').classList.toggle('mtog--on',isW2); $('btn-1099').classList.toggle('mtog--on',!isW2);
+  $('btn-w2').setAttribute('aria-pressed',isW2); $('btn-1099').setAttribute('aria-pressed',!isW2);
+  $('w2-view').style.display=isW2?'block':'none';
+  $('view-1099').style.display=isW2?'none':'block';
+  $('model-desc').innerHTML=isW2
+    ?`<div class="model-desc__icon"><i class="fas fa-user-tie"></i></div><div><strong>W2 Full-Time Employee</strong><p>You hire, manage, and cover full payroll. Higher fixed costs and longer ramp time, but more control over activity, process, and culture.</p></div>`
+    :`<div class="model-desc__icon"><i class="fas fa-file-contract"></i></div><div><strong>1099 Independent Contractor</strong><p>Commission-based, lower fixed cost. Faster to engage but still requires infrastructure, oversight, and messaging discipline to consistently perform.</p></div>`;
+  const icon=$('model-active-icon'), name=$('model-active-name'), bar=$('model-active-bar');
+  if(icon) icon.className=isW2?'fas fa-id-badge':'fas fa-file-contract';
+  if(name) name.textContent=isW2?'W2 Sales Rep':'1099 Contractor';
+  if(bar) bar.classList.toggle('model-active-bar--1099',!isW2);
+  recalc();
+}
+
+function switchTab(tab){
+  S.activeTab=tab;
+  ['w2','1099','mg'].forEach(t=>{
+    const btn=$(`tab-${t}`), panel=$(`panel-${t}`), on=t===tab;
+    btn.classList.toggle('otab--on',on); btn.setAttribute('aria-selected',on);
+    if(panel) panel.style.display=on?'block':'none';
+  });
+}
+
+function stressUpdate(){
+  S.sCR=parseFloat($('sl-cr').value)||0;
+  S.sDM=parseFloat($('sl-dm').value)||0;
+  S.sDS=parseFloat($('sl-ds').value)||0;
+  st('sv-cr',(S.sCR>=0?'+':'')+S.sCR+'%');
+  st('sv-dm',(S.sDM>=0?'+':'')+S.sDM+' deals');
+  const dSign=S.sDS<0?'−$':'+$';
+  st('sv-ds',dSign+Math.abs(S.sDS).toLocaleString());
+  fillSlider('sl-cr',-80,0,S.sCR); fillSlider('sl-dm',-10,0,S.sDM); fillSlider('sl-ds',-5000,0,S.sDS);
+  const adjDeal=Math.max(0,S.dealSize+S.sDS), adjDeals=Math.max(0,S.dealsPerMonth+S.sDM);
+  const adjCR=Math.max(1,Math.min(100,S.closeRate+S.sCR));
+  const crFactor=S.closeRate>0?adjCR/S.closeRate:1;
+  const adjRev=adjDeal*(adjDeals*crFactor);
+  const wc=w2Cost(), mc=mgCost();
+  const adjCC=INFRA+GROWTH_OS+(S.c1099Vis?VIS:0)+adjRev*(S.commRate/100)+S.draw;
+  const sw2=adjRev-wc, s99=adjRev-adjCC, smg=adjRev-mc;
+  st('sv-w2',money(sw2)); st('sv-1099',money(s99)); st('sv-mg',money(smg)); st('sv-rev',money(adjRev));
+  colorStress('sv-w2',sw2); colorStress('sv-1099',s99); colorStress('sv-mg',smg);
+  const maxAbs=Math.max(Math.abs(sw2),Math.abs(s99),Math.abs(smg),1);
+  setBar('sf-w2',sw2,maxAbs); setBar('sf-1099',s99,maxAbs); setBar('sf-mg',smg,maxAbs);
+}
+
+function syncStress(rev,wc,cc,mc){
+  const adjDeal=Math.max(0,S.dealSize+S.sDS), adjDeals=Math.max(0,S.dealsPerMonth+S.sDM);
+  const adjCR=Math.max(1,Math.min(100,S.closeRate+S.sCR));
+  const crFactor=S.closeRate>0?adjCR/S.closeRate:1;
+  const adjRev=adjDeal*(adjDeals*crFactor);
+  const adjCC=INFRA+GROWTH_OS+(S.c1099Vis?VIS:0)+adjRev*(S.commRate/100)+S.draw;
+  const sw2=adjRev-wc, s99=adjRev-adjCC, smg=adjRev-mc;
+  st('sv-w2',money(sw2)); st('sv-1099',money(s99)); st('sv-mg',money(smg)); st('sv-rev',money(adjRev));
+  colorStress('sv-w2',sw2); colorStress('sv-1099',s99); colorStress('sv-mg',smg);
+  const maxAbs=Math.max(Math.abs(sw2),Math.abs(s99),Math.abs(smg),1);
+  setBar('sf-w2',sw2,maxAbs); setBar('sf-1099',s99,maxAbs); setBar('sf-mg',smg,maxAbs);
+}
+
+function colorStress(id,val){ const el=$(id); if(!el) return; el.classList.toggle('sval--neg',val<0); }
+function setBar(id,val,max){ const el=$(id); if(!el) return; el.style.width=Math.max(0,Math.min(100,(val/max)*100))+'%'; }
+function fillSlider(id,min,max,val){
+  const el=$(id); if(!el) return;
+  const p=((val-min)/(max-min))*100;
+  el.style.background=`linear-gradient(to right,#ad7805 0%,#ad7805 ${p}%,rgba(255,255,255,0.1) ${p}%,rgba(255,255,255,0.1) 100%)`;
+}
+function resetStress(){ ['sl-cr','sl-dm','sl-ds'].forEach(id=>{const e=$(id);if(e)e.value=0;}); S.sCR=0;S.sDM=0;S.sDS=0; stressUpdate(); }
+
+function smoothScroll(id){ const el=$(id); if(!el) return; window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-80,behavior:'smooth'}); }
+
+function toggleExport(){
+  const form=$('export-form'), ok=$('export-ok');
+  ok.classList.remove('show'); form.classList.toggle('open');
+  if(form.classList.contains('open')){ setTimeout(()=>{const f=$('export-name');if(f)f.focus();},50); }
+}
+
+async function submitExport(){
+  const nameEl=$('export-name'), emailEl=$('export-email'), phoneEl=$('export-phone'), btn=$('export-submit-btn');
+  const fullName=(nameEl.value||'').trim(), email=(emailEl.value||'').trim(), phone=(phoneEl.value||'').trim();
+  let valid=true;
+  [nameEl,emailEl].forEach(el=>el.classList.remove('err'));
+  if(!fullName){nameEl.classList.add('err');valid=false;}
+  if(!email||!email.includes('@')||!email.includes('.')){emailEl.classList.add('err');valid=false;}
+  if(!valid) return;
+  readInputs();
+  const rev=S.dealSize*S.dealsPerMonth, ann=rev*12;
+  const wc=w2Cost(), cc=c1099Cost(rev), mc=mgCost();
+  const wp=rev-wc, cp=rev-cc, mp=rev-mc;
+  const wm=rev>0?((wp/rev)*100).toFixed(1):'0.0';
+  const cm=rev>0?((cp/rev)*100).toFixed(1):'0.0';
+  const mm=rev>0?((mp/rev)*100).toFixed(1):'0.0';
+  const wbe=wc>0?(wc/S.dealSize).toFixed(1):'—', mbe=mc>0?(mc/S.dealSize).toFixed(1):'—';
+  const firstName=fullName.split(' ')[0];
+  const now=new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
+  btn.classList.add('export-sending');
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending…';
+  const AT_TOKEN='patgXuDZ0t0Fg8Osb.6aab32703da81769c800fe9164d800c51305d299b846c1c5454877df213b50bb';
+  const AT_BASE='appa11jLAAJE9aN8C', AT_TABLE='pagjhwiSOe72mnBFI';
+  try{
+    await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{method:'POST',headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({fields:{'Name':fullName,'Email':email,'Phone':phone,'Deal Size':S.dealSize,'Deals Per Month':S.dealsPerMonth,'Close Rate':S.closeRate,'Monthly Revenue':rev,'Annual Revenue':ann,'W2 Monthly Cost':wc,'W2 Net Profit':wp,'W2 Margin':wm+'%','1099 Monthly Cost':cc,'1099 Net Profit':cp,'1099 Margin':cm+'%','MG Monthly Cost':mc,'MG Net Profit':mp,'MG Margin':mm+'%','Submitted At':now}})});
+  }catch(e){console.warn('Airtable save failed',e);}
+  const RESEND_KEY='re_C9QkEHQu_D95Ut2dXjgAUED9TMB3k4uMr';
+  // BUILD EMAIL — using array join so </body></html> never appears raw inside <script>
+  const _t=['<','!','D','O','C','T','Y','P','E',' ','h','t','m','l','>'].join('');
+  const _bc=['<','/','b','o','d','y','>'].join('');
+  const _hc=['<','/','h','t','m','l','>'].join('');
+  const emailHtml= _t +
+    '<html><body style="background:#0a0a0a;font-family:sans-serif;padding:40px 20px">' +
+    '<div style="max-width:600px;margin:0 auto;background:#111;border-radius:12px;border:1px solid #222;overflow:hidden">' +
+    '<div style="background:#111;border-bottom:2px solid #ad7805;padding:32px 40px;text-align:center">' +
+    '<h1 style="color:#fff;margin:0">Your ROI Breakdown</h1>' +
+    '<p style="color:#888;margin:8px 0 0">For ' + firstName + ' &middot; ' + now + '</p>' +
+    '</div>' +
+    '<div style="padding:32px 40px">' +
+    '<p style="color:#ccc;font-size:15px">Hi ' + firstName + ', here\'s what your numbers reveal about building vs buying your sales engine.</p>' +
+    '<table width="100%" style="margin-top:24px;border:1px solid #222;border-radius:8px;overflow:hidden">' +
+    '<tr style="background:#1a1a1a"><td style="padding:12px 16px;color:#888;font-size:13px">Monthly Revenue</td><td style="padding:12px 16px;color:#ad7805;font-weight:700;text-align:right;font-size:15px">' + money(rev) + '</td></tr>' +
+    '<tr><td style="padding:12px 16px;color:#888;font-size:13px">W2 True Cost</td><td style="padding:12px 16px;color:#FC8181;font-weight:700;text-align:right">' + money(wc) + '/mo</td></tr>' +
+    '<tr style="background:#1a1a1a"><td style="padding:12px 16px;color:#888;font-size:13px">1099 True Cost</td><td style="padding:12px 16px;color:#F6AD55;font-weight:700;text-align:right">' + money(cc) + '/mo</td></tr>' +
+    '<tr><td style="padding:12px 16px;color:#888;font-size:13px">MetaGrowth Investment</td><td style="padding:12px 16px;color:#ad7805;font-weight:700;text-align:right">' + money(mc) + '/mo</td></tr>' +
+    '<tr style="background:#1a1500"><td style="padding:12px 16px;color:#ad7805;font-size:13px;font-weight:700">Monthly Savings vs W2</td><td style="padding:12px 16px;color:#fff;font-weight:800;text-align:right;font-size:18px">' + money(wc-mc) + '</td></tr>' +
+    '</table>' +
+    '<div style="text-align:center;margin-top:32px">' +
+    '<a href="https://meetings.hubspot.com/josh549/revenue-audit" style="background:#ad7805;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px">Book Your Strategy Call</a>' +
+    '</div></div></div>' +
+    _bc + _hc;
+  // emailHtml built above via safe string concatenation
+  try{await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':`Bearer ${RESEND_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({from:'MetaGrowth Ventures <info@metagrowth.ventures>',to:[email],subject:`${firstName}, your MetaGrowth ROI breakdown is ready`,html:emailHtml})});}catch(e){console.warn('Email failed',e);}
+  $('export-form').classList.remove('open');
+  $('export-ok').classList.add('show');
+  nameEl.value=''; emailEl.value=''; phoneEl.value='';
+  [nameEl,emailEl,phoneEl].forEach(el=>el.classList.remove('err'));
+  btn.classList.remove('export-sending');
+  btn.innerHTML='<i class="fas fa-paper-plane" aria-hidden="true"></i> Send My ROI Breakdown';
+  setTimeout(()=>$('export-ok').classList.remove('show'),9000);
+}
+
+function handleNavScroll(){ const nav=$('site-nav'); if(nav) nav.classList.toggle('nav--scrolled',window.scrollY>40); }
+
+function onRealityToggle(){
+  const on=$('toggle-reality').checked;
+  $('panel-reality').classList.toggle('open',on);
+  ['adj-reality-w2','adj-reality-1099','adj-reality-mg'].forEach(id=>{const el=$(id);if(el)el.classList.toggle('show',on);});
+  recalc();
+}
+function onRiskToggle(){
+  const on=$('toggle-risk').checked;
+  $('panel-risk').classList.toggle('open',on);
+  ['adj-risk-w2','adj-risk-1099','adj-risk-mg'].forEach(id=>{const el=$(id);if(el)el.classList.toggle('show',on);});
+  recalc();
+}
+
+function advFillSlider(id){
+  const el=$(id); if(!el) return;
+  const p=((parseFloat(el.value)-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min)))*100;
+  el.style.background=`linear-gradient(to right,#ad7805 0%,#ad7805 ${p}%,rgba(255,255,255,0.1) ${p}%,rgba(255,255,255,0.1) 100%)`;
+}
+function advFillSliderRisk(id){
+  const el=$(id); if(!el) return;
+  const p=((parseFloat(el.value)-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min)))*100;
+  el.style.background=`linear-gradient(to right,#E53E3E 0%,#E53E3E ${p}%,rgba(255,255,255,0.1) ${p}%,rgba(255,255,255,0.1) 100%)`;
+}
+
+function readAdvanced(){
+  const realityOn=$('toggle-reality')?.checked||false, riskOn=$('toggle-risk')?.checked||false;
+  const leadWaste=realityOn?(parseFloat($('sl-lead-waste')?.value)||25)/100:0;
+  const noShow=realityOn?(parseFloat($('sl-noshow')?.value)||25)/100:0;
+  const underperf=realityOn?(parseFloat($('sl-underperf')?.value)||70)/100:1;
+  const stlMult=realityOn?parseFloat(document.querySelector('input[name="stl"]:checked')?.value||'1.0'):1.0;
+  const badHireProb=riskOn?(parseFloat($('sl-badhire')?.value)||40)/100:0;
+  const founderHrs=riskOn?(parseFloat($('founder-hrs')?.value)||10):0;
+  const founderRate=riskOn?(parseFloat($('founder-rate')?.value)||200):0;
+  if(realityOn){ st('val-lead-waste',Math.round(leadWaste*100)+'%'); st('val-noshow',Math.round(noShow*100)+'%'); st('val-underperf',Math.round(underperf*100)+'%'); }
+  if(riskOn){ st('val-badhire',Math.round(badHireProb*100)+'%'); }
+  return {realityOn,riskOn,leadWaste,noShow,underperf,stlMult,badHireProb,founderHrs,founderRate};
+}
+
+function calcAdvanced(baseRev,wc,cc,mc){
+  const adv=readAdvanced();
+  $('banner-reality')?.classList.toggle('show',adv.realityOn);
+  $('banner-risk')?.classList.toggle('show',adv.riskOn);
+  if(!adv.realityOn&&!adv.riskOn){
+    pushMainCards({revW2:baseRev,costW2:wc,profitW2:baseRev-wc,revC99:baseRev,costC99:cc,profitC99:baseRev-cc,revMG:baseRev,costMG:mc,profitMG:baseRev-mc},baseRev);
+    return;
+  }
+  const {realityOn,riskOn,leadWaste,noShow,underperf,stlMult,badHireProb,founderHrs,founderRate}=adv;
+  const w2RevMult=realityOn?(1-leadWaste)*(1-noShow)*stlMult*underperf:1;
+  const c99RevMult=realityOn?(1-leadWaste*0.7)*(1-noShow)*stlMult*(underperf+(1-underperf)*0.4):1;
+  const mgRevMult=realityOn?(1-noShow*0.35):1;
+  const adjRevW2=baseRev*w2RevMult, adjRevC99=baseRev*c99RevMult, adjRevMG=baseRev*mgRevMult;
+  const lostW2=baseRev-adjRevW2, lostC99=baseRev-adjRevC99, lostMG=baseRev-adjRevMG;
+  const adjCC=(adjRevC99*(S.commRate/100))+S.draw+INFRA+GROWTH_OS+(S.c1099Vis?VIS:0);
+  const adjProfitW2=adjRevW2-wc, adjProfitC99=adjRevC99-adjCC, adjProfitMG=adjRevMG-mc;
+  const rampRevLost=baseRev*S.rampMonths;
+  /* adv-ramp-rev-lost and adv-opp-cost already set in recalc() */
+  const badHireLoss=riskOn?badHireProb*wc*4.5:0, badHireMonthly=badHireLoss/12;
+  const founderMonthly=founderHrs*founderRate*4.33, founderMonthlyMG=founderMonthly*0.05;
+  const finalCostW2=riskOn?wc+badHireMonthly+founderMonthly:wc;
+  const finalCostC99=riskOn?adjCC+founderMonthly*0.65:adjCC;
+  const finalCostMG=riskOn?mc+founderMonthlyMG:mc;
+  const finalProfitW2=adjRevW2-finalCostW2, finalProfitC99=adjRevC99-finalCostC99, finalProfitMG=adjRevMG-finalCostMG;
+  pushMainCards({revW2:adjRevW2,costW2:finalCostW2,profitW2:finalProfitW2,revC99:adjRevC99,costC99:finalCostC99,profitC99:finalProfitC99,revMG:adjRevMG,costMG:finalCostMG,profitMG:finalProfitMG},baseRev);
+  if(realityOn){
+    st('ar-w2-leadwaste','−'+money(baseRev*leadWaste)); st('ar-w2-noshow','−'+money(baseRev*(1-leadWaste)*noShow));
+    st('ar-w2-stl',stlMult.toFixed(1)+'×'); st('ar-w2-underperf',Math.round(underperf*100)+'%');
+    st('ar-w2-rev',money(adjRevW2)); st('ar-w2-lost','−'+money(lostW2));
+    const apEl=$('ar-w2-profit'); if(apEl){apEl.textContent=money(adjProfitW2);apEl.className='adj-num'+(adjProfitW2<0?' adj-num--neg':'');}
+    st('ar-1099-leadwaste','−'+money(baseRev*leadWaste*0.7)); st('ar-1099-noshow','−'+money(baseRev*(1-leadWaste*0.7)*noShow));
+    st('ar-1099-stl',stlMult.toFixed(1)+'×'); st('ar-1099-underperf',Math.round((underperf+(1-underperf)*0.4)*100)+'%');
+    st('ar-1099-rev',money(adjRevC99)); st('ar-1099-lost','−'+money(lostC99));
+    const ap99El=$('ar-1099-profit'); if(ap99El){ap99El.textContent=money(adjProfitC99);ap99El.className='adj-num'+(adjProfitC99<0?' adj-num--neg':'');}
+    st('ar-mg-noshow','−'+money(lostMG)); st('ar-mg-rev',money(adjRevMG));
+    const apMGEl=$('ar-mg-profit'); if(apMGEl){apMGEl.textContent=money(adjProfitMG);apMGEl.className='adj-num adj-num--good';}
+    st('ar-mg-lost',lostMG<50?'~$0':'−'+money(lostMG));
+  }
+  if(riskOn){
+    st('ar-w2-badhire','−'+money(badHireMonthly)); st('ar-w2-founder','−'+money(founderMonthly));
+    st('ar-w2-oppcost','−'+money(rampRevLost)); st('ar-w2-totalcost',money(finalCostW2));
+    st('ar-1099-founder','−'+money(founderMonthly*0.65)); st('ar-1099-totalcost',money(finalCostC99));
+    st('ar-mg-founder',founderMonthlyMG<50?'~$0':'−'+money(founderMonthlyMG)); st('ar-mg-totalcost',money(finalCostMG));
+  }
+}
+
+function pushMainCards({revW2,costW2,profitW2,revC99,costC99,profitC99,revMG,costMG,profitMG},baseRev){
+  const mg=(p,r)=>r>0?(p/r)*100:0, roi=(r,c)=>c>0?r/c:0;
+  const be=(c,d)=>d>0?c/d:0, cpd=(c,d)=>d>0?c/d:0;
+  st('r-w2-rev',money(revW2)); st('r-w2-cost',money(costW2)); st('r-w2-profit',money(profitW2));
+  st('r-w2-margin',pct(mg(profitW2,revW2))); st('r-w2-cpd',money(cpd(costW2,S.dealsPerMonth)));
+  st('r-w2-be',dls(be(costW2,S.dealSize))); st('r-w2-roi',mx(roi(revW2,costW2)));
+  sh('r-w2-be-formula',money(costW2)+' ÷ '+money(S.dealSize)+' = '+dls(be(costW2,S.dealSize))+' deals needed');
+  colorProfit('r-w2-profit',profitW2);
+  st('r-1099-rev',money(revC99)); st('r-1099-cost',money(costC99)); st('r-1099-profit',money(profitC99));
+  st('r-1099-margin',pct(mg(profitC99,revC99))); st('r-1099-cpd',money(cpd(costC99,S.dealsPerMonth)));
+  st('r-1099-be',dls(be(costC99,S.dealSize))); st('r-1099-roi',mx(roi(revC99,costC99)));
+  sh('r-1099-be-formula',money(costC99)+' ÷ '+money(S.dealSize)+' = '+dls(be(costC99,S.dealSize))+' deals needed');
+  colorProfit('r-1099-profit',profitC99);
+  st('r-mg-rev',money(revMG)); st('r-mg-cost',money(costMG)); st('r-mg-profit',money(profitMG));
+  st('r-mg-margin',pct(mg(profitMG,revMG))); st('r-mg-cpd',money(cpd(costMG,S.dealsPerMonth)));
+  st('r-mg-be',dls(be(costMG,S.dealSize))); st('r-mg-roi',mx(roi(revMG,costMG)));
+  st('r-mg-be-formula',be(costMG,S.dealSize)<=1.2?'under 1 deal — immediate ROI':dls(be(costMG,S.dealSize))+' deals needed');
+  colorProfit('r-mg-profit',profitMG);
+  st('snap-rev',money(revW2)+'/mo'); st('snap-w2',money(costW2)+'/mo'); st('snap-mg',money(costMG)+'/mo');
+}
+
+(function init(){
+  ['deal-size','deals-per-month','close-rate','sales-cycle','base-salary','commission-rate','optional-draw'].forEach(id=>{
+    const el=$(id); if(el) el.addEventListener('input',recalc);
+  });
+  $('ramp-months')?.addEventListener('change',recalc);
+  $('mgmt-cost')?.addEventListener('change',recalc);
+  $('w2-visibility')?.addEventListener('change',recalc);
+  $('c1099-visibility')?.addEventListener('change',recalc);
+  $('mg-visibility')?.addEventListener('change',recalc);
+  ['sl-cr','sl-dm','sl-ds'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',stressUpdate);});
+
+  $('w2-view').style.display='block';
+  $('view-1099').style.display='none';
+  ['w2','1099','mg'].forEach(t=>{const p=$(`panel-${t}`);if(p)p.style.display=t==='w2'?'block':'none';});
+
+  fillSlider('sl-cr',-80,0,0); fillSlider('sl-dm',-10,0,0); fillSlider('sl-ds',-5000,0,0);
+  recalc();
+
+  window.addEventListener('scroll',handleNavScroll,{passive:true});
+
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
+  },{threshold:0.06});
+  document.querySelectorAll('.section').forEach(s=>{
+    s.style.opacity='0'; s.style.transform='translateY(18px)'; s.style.transition='opacity .5s ease,transform .5s ease';
+    io.observe(s);
+  });
+  const hero=$('hero'); if(hero){hero.style.opacity='1';hero.style.transform='translateY(0)';}
+
+  $('toggle-reality')?.addEventListener('change',onRealityToggle);
+  $('toggle-risk')?.addEventListener('change',onRiskToggle);
+  ['sl-lead-waste','sl-noshow','sl-underperf'].forEach(id=>{
+    const el=$(id); if(el) el.addEventListener('input',()=>{advFillSlider(id);recalc();});
+  });
+  document.querySelectorAll('input[name="stl"]').forEach(r=>r.addEventListener('change',recalc));
+  $('sl-badhire')?.addEventListener('input',()=>{advFillSliderRisk('sl-badhire');recalc();});
+  $('founder-hrs')?.addEventListener('input',recalc);
+  $('founder-rate')?.addEventListener('input',recalc);
+  advFillSlider('sl-lead-waste'); advFillSlider('sl-noshow'); advFillSlider('sl-underperf');
+  advFillSliderRisk('sl-badhire');
+}());
+
+
+
+</script>
+
+<!-- BOOKING OVERLAY -->
+<div class="bk-overlay" id="bk-overlay" role="dialog" aria-modal="true" aria-labelledby="bk-title">
+  <div class="bk-topbar">
+    <div>
+      <div class="bk-topbar__title" id="bk-title"><i class="fas fa-calendar-check" aria-hidden="true"></i> Book a Strategy Call</div>
+      <div class="bk-topbar__sub">No pitch. No pressure. Just clarity on your numbers.</div>
+    </div>
+    <button class="bk-close" onclick="closeBooking()" aria-label="Close"><i class="fas fa-xmark"></i> Close</button>
+  </div>
+  <div class="bk-body"><div class="bk-inner"><div class="meetings-iframe-container" data-src="https://meetings.hubspot.com/josh549/revenue-audit?embed=true"></div></div></div>
+</div>
+<script type="text/javascript" id="hs-meetings-script" src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"></script>
+
+</body>
+</html>
